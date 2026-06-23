@@ -1,3 +1,12 @@
+cd Locatic
+dotnet restore
+dotnet build
+dotnet ef database update
+dotnet run
+
+Si `dotnet ef` ne fonctionne pas :
+dotnet tool install --global dotnet-ef --version 8.0.26
+
 # Locatic — Agence de location de voitures
 
 Tu construis une application web **ASP.NET Core MVC** adossée à une base de données **SQLite** (via Entity Framework Core) pour gérer une petite agence de location de voitures : son catalogue, ses clients et ses réservations.
