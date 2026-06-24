@@ -1,0 +1,33 @@
+@model IEnumerable<Locatic.Models.CarModel>
+
+@{
+    ViewData["Title"] = "Modèles";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Modèles</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Ajouter</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Modèle</th>
+            <th>Marque</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var carModel in Model)
+        {
+            <tr>
+                <td>@carModel.Name</td>
+                <td>@carModel.Brand.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@carModel.Id" class="btn btn-sm">Modifier</a>
+                    <a asp-action="Delete" asp-route-id="@carModel.Id" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

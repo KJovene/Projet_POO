@@ -1,4 +1,4 @@
-@model Locatic.Models.Car
+@model Locatic.Models.ViewModels.CarCreateVM
 
 @{
     ViewData["Title"] = "Ajouter une voiture";
@@ -12,40 +12,39 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">
-                <label asp-for="LicensePlate" class="form-label">Plaque d'immatriculation</label>
+                <label asp-for="LicensePlate" class="form-label"></label>
                 <input asp-for="LicensePlate" class="form-control" />
                 <span asp-validation-for="LicensePlate" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="CarModelId" class="form-label">Modèle</label>
+                <label asp-for="CarModelId" class="form-label"></label>
                 <select asp-for="CarModelId" asp-items="ViewBag.CarModelId" class="form-select">
                     <option value="">-- Sélectionner un modèle --</option>
-                    <option value="">Toyota</option>
                 </select>
                 <span asp-validation-for="CarModelId" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Year" class="form-label">Année</label>
+                <label asp-for="Year" class="form-label"></label>
                 <input asp-for="Year" class="form-control" />
                 <span asp-validation-for="Year" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="FuelType" class="form-label">Carburant</label>
+                <label asp-for="FuelType" class="form-label"></label>
                 <select asp-for="FuelType" asp-items="Html.GetEnumSelectList<Fuel>()" class="form-select"></select>
                 <span asp-validation-for="FuelType" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="NumberOfSeats" class="form-label">Nombre de places</label>
+                <label asp-for="NumberOfSeats" class="form-label"></label>
                 <input asp-for="NumberOfSeats" class="form-control" />
                 <span asp-validation-for="NumberOfSeats" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="DailyPrice" class="form-label">Prix par jour (€)</label>
+                <label asp-for="DailyPrice" class="form-label"></label>
                 <input asp-for="DailyPrice" class="form-control" />
                 <span asp-validation-for="DailyPrice" class="text-danger"></span>
             </div>

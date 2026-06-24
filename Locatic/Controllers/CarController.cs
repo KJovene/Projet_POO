@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Locatic.Data;
 using Locatic.Models;
+using Locatic.Models.ViewModels;
 
 namespace Locatic.Controllers;
 
@@ -43,17 +44,27 @@ public class CarController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Car car)
+    public async Task<IActionResult> Create(CarCreateVM vm)
     {
-        ModelState.Remove(nameof(Car.CarModel));
         if (ModelState.IsValid)
         {
+            var car = new Car
+            {
+                LicensePlate = vm.LicensePlate,
+                CarModelId = vm.CarModelId,
+                Year = vm.Year,
+                FuelType = vm.FuelType,
+                NumberOfSeats = vm.NumberOfSeats,
+                DailyPrice = vm.DailyPrice
+            };
+
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        await PopulateCarModelsAsync(car.CarModelId);
-        return View(car);
+
+        await PopulateCarModelsAsync(vm.CarModelId);
+        return View(vm);
     }
 
     public async Task<IActionResult> Edit(int id)

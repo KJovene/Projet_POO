@@ -1,0 +1,36 @@
+@model Locatic.Models.ViewModels.CarModelFormVM
+
+@{
+    ViewData["Title"] = "Ajouter un modèle";
+}
+
+<h1>Ajouter un modèle</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BrandId" class="form-label"></label>
+                <select asp-for="BrandId" asp-items="ViewBag.BrandId" class="form-select">
+                    <option value="">-- Sélectionner une marque --</option>
+                </select>
+                <span asp-validation-for="BrandId" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
