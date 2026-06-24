@@ -1,0 +1,35 @@
+@model Locatic.Models.Car
+
+@{
+    ViewData["Title"] = "Détails voiture";
+}
+
+<h1>Détails</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Plaque d'immatriculation</dt>
+    <dd class="col-sm-9">@Model.LicensePlate</dd>
+
+    <dt class="col-sm-3">Marque</dt>
+    <dd class="col-sm-9">@Model.CarModel.Brand.Name</dd>
+
+    <dt class="col-sm-3">Modèle</dt>
+    <dd class="col-sm-9">@Model.CarModel.Name</dd>
+
+    <dt class="col-sm-3">Année</dt>
+    <dd class="col-sm-9">@Model.Year</dd>
+
+    <dt class="col-sm-3">Carburant</dt>
+    <dd class="col-sm-9">@Model.FuelType</dd>
+
+    <dt class="col-sm-3">Nombre de places</dt>
+    <dd class="col-sm-9">@Model.NumberOfSeats</dd>
+
+    <dt class="col-sm-3">Prix par jour</dt>
+    <dd class="col-sm-9">@Model.DailyPrice.ToString("C")</dd>
+</dl>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
+    <a asp-action="Index" class="btn btn-secondary">Retour</a>
+</div>
