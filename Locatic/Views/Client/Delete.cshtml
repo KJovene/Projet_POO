@@ -1,35 +1,50 @@
 @model Locatic.Models.Client
-
 @{
     ViewData["Title"] = "Supprimer un client";
     var deleteError = ViewData["DeleteError"] as string;
 }
 
-<h1>Supprimer un client</h1>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Carnet</div>
+            <h1>Supprimer un client</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
 
-@if (!string.IsNullOrWhiteSpace(deleteError))
-{
-    <div class="alert alert-danger">@deleteError</div>
-}
+    <div class="rv-card rv-card-pad" style="max-width:680px">
+        @if (!string.IsNullOrWhiteSpace(deleteError))
+        {
+            <div class="rv-alert rv-alert-danger">@deleteError</div>
+        }
+        else
+        {
+            <div class="rv-alert rv-alert-danger">
+                ⚠️ Êtes-vous sûr de vouloir supprimer ce client ? Cette action est définitive.
+            </div>
+        }
 
-<p class="text-danger">Êtes-vous sûr de vouloir supprimer ce client ?</p>
+        <dl class="rv-dl">
+            <dt>Prénom</dt>
+            <dd>@Model.FirstName</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Prénom</dt>
-    <dd class="col-sm-9">@Model.FirstName</dd>
+            <dt>Nom</dt>
+            <dd>@Model.LastName</dd>
 
-    <dt class="col-sm-3">Nom</dt>
-    <dd class="col-sm-9">@Model.LastName</dd>
+            <dt>Email</dt>
+            <dd>@Model.Email</dd>
 
-    <dt class="col-sm-3">Email</dt>
-    <dd class="col-sm-9">@Model.Email</dd>
+            <dt>Téléphone</dt>
+            <dd>@Model.PhoneNumber</dd>
+        </dl>
 
-    <dt class="col-sm-3">Téléphone</dt>
-    <dd class="col-sm-9">@Model.PhoneNumber</dd>
-</dl>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
-</form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-danger">Supprimer définitivement</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>

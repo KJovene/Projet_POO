@@ -1,37 +1,61 @@
 @model IEnumerable<Locatic.Models.Client>
-
 @{
     ViewData["Title"] = "Clients";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Clients</h1>
-    <a asp-action="Create" class="btn btn-primary">+ Ajouter</a>
-</div>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Carnet</div>
+            <h1>Clients</h1>
+            <p>@Model.Count() client(s) enregistré(s).</p>
+        </div>
+        <a class="rv-btn rv-btn-primary" asp-action="Create">+ Ajouter un client</a>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Prénom</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var client in Model)
-        {
-            <tr>
-                <td>@client.FirstName</td>
-                <td>@client.LastName</td>
-                <td>@client.Email</td>
-                <td>@client.PhoneNumber</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@client.Id" class="btn btn-sm">Modifier</a>
-                    <a asp-action="Delete" asp-route-id="@client.Id" class="btn btn-sm btn-danger">Supprimer</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (Model.Any())
+    {
+        <div class="rv-table-wrap">
+            <table class="rv-table">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th style="text-align:right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var client in Model)
+                    {
+                        var initials = $"{(client.FirstName?.Length > 0 ? client.FirstName[0] : ' ')}{(client.LastName?.Length > 0 ? client.LastName[0] : ' ')}".Trim().ToUpper();
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:12px">
+                                    <span style="width:38px;height:38px;border-radius:11px;background:var(--rv-soft);color:var(--rv-primary-dark);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">@initials</span>
+                                    <span class="rv-strong">@client.LastName @client.FirstName</span>
+                                </div>
+                            </td>
+                            <td>@client.Email</td>
+                            <td>@client.PhoneNumber</td>
+                            <td>
+                                <div class="rv-actions">
+                                    <a class="rv-btn rv-btn-light rv-btn-sm" asp-action="Edit" asp-route-id="@client.Id">Modifier</a>
+                                    <a class="rv-btn rv-btn-danger rv-btn-sm" asp-action="Delete" asp-route-id="@client.Id">Supprimer</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="rv-card rv-empty">
+            <div class="rv-empty-icon">👥</div>
+            <p>Aucun client pour le moment.</p>
+            <a class="rv-btn rv-btn-primary" asp-action="Create">Ajouter le premier client</a>
+        </div>
+    }
+</div>

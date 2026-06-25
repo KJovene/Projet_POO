@@ -1,33 +1,53 @@
 @model IEnumerable<Locatic.Models.CarModel>
-
 @{
     ViewData["Title"] = "Modèles";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Modèles</h1>
-    <a asp-action="Create" class="btn btn-primary">+ Ajouter</a>
-</div>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Centre de contrôle</div>
+            <h1>Modèles</h1>
+            <p>@Model.Count() modèle(s) dans le référentiel.</p>
+        </div>
+        <a class="rv-btn rv-btn-primary" asp-action="Create">+ Ajouter un modèle</a>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Modèle</th>
-            <th>Marque</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var carModel in Model)
-        {
-            <tr>
-                <td>@carModel.Name</td>
-                <td>@carModel.Brand.Name</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@carModel.Id" class="btn btn-sm">Modifier</a>
-                    <a asp-action="Delete" asp-route-id="@carModel.Id" class="btn btn-sm btn-danger">Supprimer</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (Model.Any())
+    {
+        <div class="rv-table-wrap">
+            <table class="rv-table">
+                <thead>
+                    <tr>
+                        <th>Modèle</th>
+                        <th>Marque</th>
+                        <th style="text-align:right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var carModel in Model)
+                    {
+                        <tr>
+                            <td class="rv-strong">@carModel.Name</td>
+                            <td><span class="rv-badge">@carModel.Brand.Name</span></td>
+                            <td>
+                                <div class="rv-actions">
+                                    <a class="rv-btn rv-btn-light rv-btn-sm" asp-action="Edit" asp-route-id="@carModel.Id">Modifier</a>
+                                    <a class="rv-btn rv-btn-danger rv-btn-sm" asp-action="Delete" asp-route-id="@carModel.Id">Supprimer</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="rv-card rv-empty">
+            <div class="rv-empty-icon">🚙</div>
+            <p>Aucun modèle enregistré.</p>
+            <a class="rv-btn rv-btn-primary" asp-action="Create">Ajouter le premier modèle</a>
+        </div>
+    }
+</div>

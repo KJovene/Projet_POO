@@ -1,0 +1,38 @@
+@model Locatic.Models.ViewModels.CenterIndexVM
+@{
+    ViewData["Title"] = "Centre de contrôle";
+}
+
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Administration</div>
+            <h1>Centre de contrôle</h1>
+            <p>Gérez le référentiel de votre flotte : les marques et les modèles de véhicules.</p>
+        </div>
+    </div>
+
+    <div class="rv-hub-grid">
+        <div class="rv-hub-card">
+            <div class="rv-hub-icon">🏷️</div>
+            <div class="rv-hub-count">@Model.BrandCount</div>
+            <h3>Marques</h3>
+            <p>Les constructeurs disponibles dans le référentiel (Peugeot, BMW, Toyota…).</p>
+            <div class="rv-form-actions">
+                <a class="rv-btn rv-btn-primary" asp-controller="CarBrand" asp-action="Create">+ Ajouter une marque</a>
+                <a class="rv-btn rv-btn-light" asp-controller="CarBrand" asp-action="Index">Gérer</a>
+            </div>
+        </div>
+
+        <div class="rv-hub-card">
+            <div class="rv-hub-icon">🚙</div>
+            <div class="rv-hub-count">@Model.ModelCount</div>
+            <h3>Modèles</h3>
+            <p>Les modèles rattachés aux marques, utilisés pour créer les voitures de la flotte.</p>
+            <div class="rv-form-actions">
+                <a class="rv-btn rv-btn-primary" asp-controller="CarModel" asp-action="Create">+ Ajouter un modèle</a>
+                <a class="rv-btn rv-btn-light" asp-controller="CarModel" asp-action="Index">Gérer</a>
+            </div>
+        </div>
+    </div>
+</div>

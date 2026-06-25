@@ -1,31 +1,38 @@
 @model Locatic.Models.ViewModels.CarBrandFormVM
-
 @{
     ViewData["Title"] = "Modifier une marque";
 }
 
-<h1>Modifier une marque</h1>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Centre de contrôle</div>
+            <h1>Modifier une marque</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
 
-<div class="row">
-    <div class="col-md-6">
+    <div class="rv-card rv-card-pad rv-form">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="Country" class="form-label"></label>
                 <input asp-for="Country" class="form-control" />
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-primary">Enregistrer</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
         </form>
     </div>
 </div>

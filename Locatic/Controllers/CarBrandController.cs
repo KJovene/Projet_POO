@@ -18,6 +18,7 @@ public class CarBrandController : Controller
     public async Task<IActionResult> Index()
     {
         var brands = await _context.CarBrands
+            .Include(brand => brand.CarModels)
             .OrderBy(brand => brand.Name)
             .ToListAsync();
 

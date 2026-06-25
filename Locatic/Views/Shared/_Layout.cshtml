@@ -1,61 +1,87 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    string Active(string c) => string.Equals(controller, c, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    string ActiveAny(params string[] cs) => cs.Any(c => string.Equals(controller, c, StringComparison.OrdinalIgnoreCase)) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Locatic</title>
+    <title>@ViewData["Title"] · Locatic</title>
+    <script>
+        // Applique le thème avant le rendu pour éviter tout flash.
+        (function () {
+            try {
+                var t = localStorage.getItem('locatic-theme');
+                if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) { }
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Locatic.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Locatic</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CarBrand" asp-action="Index">Marques</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CarModel" asp-action="Index">Modèles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Car" asp-action="Index">Voitures</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="Index">Clients</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="Index">Réservations</a>
-                        </li>
-                    </ul>
-                </div>
+    <header class="rv-header" id="rvHeader">
+        <nav class="rv-nav">
+            <a class="rv-brand" asp-controller="Home" asp-action="Index">
+                <span class="rv-logo">◉</span>
+                Locatic
+            </a>
+            <div class="rv-nav-links">
+                <a class="@Active("Home")" asp-controller="Home" asp-action="Index">Accueil</a>
+                <a class="@Active("Car")" asp-controller="Car" asp-action="Index">Voitures</a>
+                <a class="@Active("Client")" asp-controller="Client" asp-action="Index">Clients</a>
+                <a class="@Active("Reservation")" asp-controller="Reservation" asp-action="Index">Réservations</a>
+                <a class="@ActiveAny("Center", "CarBrand", "CarModel")" asp-controller="Center" asp-action="Index">Centre de contrôle</a>
             </div>
+            <div class="rv-nav-right">
+                <button class="rv-theme-toggle" id="rvThemeToggle" type="button"
+                        aria-label="Basculer le mode sombre" title="Basculer le mode sombre">🌙</button>
+                <a class="rv-btn rv-btn-primary" asp-controller="Reservation" asp-action="Create">Réserver</a>
+            </div>
+            <button class="rv-nav-toggle" type="button" aria-label="Menu"
+                    onclick="document.getElementById('rvHeader').classList.toggle('rv-open')">☰</button>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Locatic - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main class="rv-main">
+        @RenderBody()
+    </main>
+
+    <footer class="rv-footer">
+        <div class="rv-footer-top">
+            <div>
+                <a class="rv-brand" asp-controller="Home" asp-action="Index">
+                    <span class="rv-logo">◉</span>
+                    Locatic
+                </a>
+                <p>La plateforme simple et moderne pour gérer la location de véhicules.</p>
+            </div>
+            <div class="rv-footer-col">
+                <div class="rv-footer-col-title">Produit</div>
+                <a asp-controller="Car" asp-action="Index">Voitures</a>
+                <a asp-controller="Reservation" asp-action="Index">Réservations</a>
+                <a asp-controller="Client" asp-action="Index">Clients</a>
+            </div>
+            <div class="rv-footer-col">
+                <div class="rv-footer-col-title">Gestion</div>
+                <a asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
+                <a asp-controller="Client" asp-action="Create">Ajouter un client</a>
+                <a asp-controller="Reservation" asp-action="Create">Nouvelle réservation</a>
+                <a asp-controller="Center" asp-action="Index">Centre de contrôle</a>
+            </div>
+        </div>
+        <div class="rv-footer-bottom">
+            <div>© 2026 Locatic — Tous droits réservés.</div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

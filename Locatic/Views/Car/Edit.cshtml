@@ -1,24 +1,29 @@
 @model Locatic.Models.Car
-
 @{
     ViewData["Title"] = "Modifier une voiture";
 }
 
-<h1>Modifier une voiture</h1>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>Modifier une voiture</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
 
-<div class="row">
-    <div class="col-md-6">
+    <div class="rv-card rv-card-pad rv-form">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="LicensePlate" class="form-label">Plaque d'immatriculation</label>
                 <input asp-for="LicensePlate" class="form-control" />
                 <span asp-validation-for="LicensePlate" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="CarModelId" class="form-label">Modèle</label>
                 <select asp-for="CarModelId" asp-items="ViewBag.CarModelId" class="form-select">
                     <option value="">-- Sélectionner un modèle --</option>
@@ -26,32 +31,34 @@
                 <span asp-validation-for="CarModelId" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="Year" class="form-label">Année</label>
                 <input asp-for="Year" class="form-control" />
                 <span asp-validation-for="Year" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="FuelType" class="form-label">Carburant</label>
                 <select asp-for="FuelType" asp-items="Html.GetEnumSelectList<Fuel>()" class="form-select"></select>
                 <span asp-validation-for="FuelType" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="NumberOfSeats" class="form-label">Nombre de places</label>
                 <input asp-for="NumberOfSeats" class="form-control" />
                 <span asp-validation-for="NumberOfSeats" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="rv-field">
                 <label asp-for="DailyPrice" class="form-label">Prix par jour (€)</label>
                 <input asp-for="DailyPrice" class="form-control" />
                 <span asp-validation-for="DailyPrice" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-primary">Enregistrer</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
         </form>
     </div>
 </div>

@@ -1,44 +1,55 @@
 @model IEnumerable<Locatic.Models.Car>
-
 @{
     ViewData["Title"] = "Voitures";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Voitures</h1>
-    <a asp-action="Create" class="btn btn-primary">+ Ajouter</a>
-</div>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>Voitures</h1>
+            <p>@Model.Count() véhicule(s) dans votre flotte.</p>
+        </div>
+        <a class="rv-btn rv-btn-primary" asp-action="Create">+ Ajouter une voiture</a>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Plaque</th>
-            <th>Modèle</th>
-            <th>Marque</th>
-            <th>Année</th>
-            <th>Carburant</th>
-            <th>Places</th>
-            <th>Prix/jour</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var car in Model)
-        {
-            <tr>
-                <td>@car.LicensePlate</td>
-                <td>@car.CarModel.Name</td>
-                <td>@car.CarModel.Brand.Name</td>
-                <td>@car.Year</td>
-                <td>@car.FuelType</td>
-                <td>@car.NumberOfSeats</td>
-                <td>@car.DailyPrice.ToString("C")</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm">Détails</a>
-                    <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-sm">Modifier</a>
-                    <a asp-action="Delete" asp-route-id="@car.Id" class="btn btn-sm btn-danger">Supprimer</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (Model.Any())
+    {
+        <div class="rv-fleet-grid">
+            @foreach (var car in Model)
+            {
+                <div class="rv-car-card">
+                    <div class="rv-car-shot">
+                        <img src="@car.ImageUrl()" alt="@car.CarModel.Brand.Name @car.CarModel.Name" loading="lazy" />
+                        <span class="rv-car-cat">@car.Category()</span>
+                    </div>
+                    <div class="rv-car-body">
+                        <div class="rv-car-top">
+                            <h3 class="rv-car-name">@car.CarModel.Brand.Name @car.CarModel.Name</h3>
+                            <div class="rv-car-price">@car.DailyPrice.ToString("0")€<small>/j</small></div>
+                        </div>
+                        <div class="rv-sub" style="margin-top:4px">@car.LicensePlate</div>
+                        <div class="rv-car-specs">
+                            <span>@car.FuelType.Icon() @car.FuelType.FrenchLabel()</span>
+                            <span>👤 @car.NumberOfSeats places</span>
+                            <span>📅 @car.Year</span>
+                        </div>
+                        <div class="rv-actions" style="margin-top:18px;justify-content:flex-start">
+                            <a class="rv-btn rv-btn-ghost rv-btn-sm" asp-action="Details" asp-route-id="@car.Id">Détails</a>
+                            <a class="rv-btn rv-btn-light rv-btn-sm" asp-action="Edit" asp-route-id="@car.Id">Modifier</a>
+                            <a class="rv-btn rv-btn-danger rv-btn-sm" asp-action="Delete" asp-route-id="@car.Id">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="rv-card rv-empty">
+            <div class="rv-empty-icon">🚗</div>
+            <p>Aucune voiture enregistrée.</p>
+            <a class="rv-btn rv-btn-primary" asp-action="Create">Ajouter la première voiture</a>
+        </div>
+    }
+</div>

@@ -1,29 +1,42 @@
 @model Locatic.Models.Car
-
 @{
     ViewData["Title"] = "Supprimer une voiture";
 }
 
-<h1>Supprimer une voiture</h1>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>Supprimer une voiture</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
 
-<p class="text-danger">Êtes-vous sûr de vouloir supprimer cette voiture ?</p>
+    <div class="rv-card rv-card-pad" style="max-width:680px">
+        <div class="rv-alert rv-alert-danger">
+            ⚠️ Êtes-vous sûr de vouloir supprimer cette voiture ? Cette action est définitive.
+        </div>
 
-<dl class="row">
-    <dt class="col-sm-3">Plaque d'immatriculation</dt>
-    <dd class="col-sm-9">@Model.LicensePlate</dd>
+        <dl class="rv-dl">
+            <dt>Plaque</dt>
+            <dd>@Model.LicensePlate</dd>
 
-    <dt class="col-sm-3">Marque / Modèle</dt>
-    <dd class="col-sm-9">@Model.CarModel.Brand.Name @Model.CarModel.Name</dd>
+            <dt>Marque / Modèle</dt>
+            <dd>@Model.CarModel.Brand.Name @Model.CarModel.Name</dd>
 
-    <dt class="col-sm-3">Année</dt>
-    <dd class="col-sm-9">@Model.Year</dd>
+            <dt>Année</dt>
+            <dd>@Model.Year</dd>
 
-    <dt class="col-sm-3">Prix par jour</dt>
-    <dd class="col-sm-9">@Model.DailyPrice.ToString("C")</dd>
-</dl>
+            <dt>Prix par jour</dt>
+            <dd>@Model.DailyPrice.ToString("0")€</dd>
+        </dl>
 
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
-</form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-danger">Supprimer définitivement</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>

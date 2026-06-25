@@ -1,29 +1,44 @@
 @model Locatic.Models.CarModel
-
 @{
     ViewData["Title"] = "Supprimer un modèle";
     var deleteError = ViewData["DeleteError"] as string;
 }
 
-<h1>Supprimer un modèle</h1>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Centre de contrôle</div>
+            <h1>Supprimer un modèle</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
 
-@if (!string.IsNullOrWhiteSpace(deleteError))
-{
-    <div class="alert alert-danger">@deleteError</div>
-}
+    <div class="rv-card rv-card-pad" style="max-width:680px">
+        @if (!string.IsNullOrWhiteSpace(deleteError))
+        {
+            <div class="rv-alert rv-alert-danger">@deleteError</div>
+        }
+        else
+        {
+            <div class="rv-alert rv-alert-danger">
+                ⚠️ Êtes-vous sûr de vouloir supprimer ce modèle ? Cette action est définitive.
+            </div>
+        }
 
-<p class="text-danger">Êtes-vous sûr de vouloir supprimer ce modèle ?</p>
+        <dl class="rv-dl">
+            <dt>Modèle</dt>
+            <dd>@Model.Name</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Modèle</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
+            <dt>Marque</dt>
+            <dd>@Model.Brand.Name</dd>
+        </dl>
 
-    <dt class="col-sm-3">Marque</dt>
-    <dd class="col-sm-9">@Model.Brand.Name</dd>
-</dl>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
-</form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-danger">Supprimer définitivement</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>

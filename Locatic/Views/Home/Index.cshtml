@@ -1,8 +1,144 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model Locatic.Models.ViewModels.HomeIndexVM
+@{
+    ViewData["Title"] = "Accueil";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- HERO -->
+<section class="rv-wide rv-hero">
+    <div class="rv-hero-grid">
+        <div class="rv-hero-copy">
+            <div class="rv-eyebrow">Plus de @Model.CarCount véhicules disponibles</div>
+            <h1>Louez la voiture<br>qu'il vous faut, <span class="rv-accent">sans détour.</span></h1>
+            <p class="rv-hero-lead">
+                Réservation en quelques clics, gestion simplifiée des véhicules, des clients
+                et des contrats. Tout au même endroit.
+            </p>
+            <div class="rv-hero-cta">
+                <a class="rv-btn rv-btn-primary" asp-controller="Reservation" asp-action="Create">Réserver maintenant</a>
+                <a class="rv-btn rv-btn-light" href="#flotte">Voir la flotte</a>
+            </div>
+            <div class="rv-stats">
+                <div>
+                    <div class="rv-stat-num">@Model.CarCount</div>
+                    <div class="rv-stat-label">Véhicules</div>
+                </div>
+                <div class="rv-stat-sep"></div>
+                <div>
+                    <div class="rv-stat-num">@Model.ClientCount</div>
+                    <div class="rv-stat-label">Clients</div>
+                </div>
+                <div class="rv-stat-sep"></div>
+                <div>
+                    <div class="rv-stat-num">24/7</div>
+                    <div class="rv-stat-label">Assistance</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rv-hero-visual">
+            <div class="rv-hero-img"><img src="~/images/hero-car.jpg" alt="Voiture de location" /></div>
+            <div class="rv-hero-float">
+                <span class="rv-hero-float-icon">★</span>
+                <div>
+                    <div style="font-weight:800;font-size:16px">4,9 / 5</div>
+                    <div class="rv-sub">Note moyenne</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FLOTTE -->
+<section id="flotte" class="rv-wide rv-section">
+    <div class="rv-section-head">
+        <h2>Notre flotte</h2>
+        <p>Des citadines aux SUV, trouvez le véhicule adapté à chaque trajet.</p>
+    </div>
+
+    @if (Model.FeaturedCars.Any())
+    {
+        <div class="rv-fleet-grid">
+            @foreach (var car in Model.FeaturedCars)
+            {
+                <div class="rv-car-card">
+                    <div class="rv-car-shot">
+                        <img src="@car.ImageUrl()" alt="@car.CarModel.Brand.Name @car.CarModel.Name" loading="lazy" />
+                        <span class="rv-car-cat">@car.Category()</span>
+                    </div>
+                    <div class="rv-car-body">
+                        <div class="rv-car-top">
+                            <h3 class="rv-car-name">@car.CarModel.Brand.Name @car.CarModel.Name</h3>
+                            <div class="rv-car-price">@car.DailyPrice.ToString("0")€<small>/j</small></div>
+                        </div>
+                        <div class="rv-car-specs">
+                            <span>@car.FuelType.Icon() @car.FuelType.FrenchLabel()</span>
+                            <span>👤 @car.NumberOfSeats places</span>
+                            <span>📅 @car.Year</span>
+                        </div>
+                        <a class="rv-btn rv-btn-ghost rv-btn-block"
+                           asp-controller="Reservation" asp-action="Create">Réserver</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="rv-card rv-empty">
+            <div class="rv-empty-icon">🚗</div>
+            <p>Aucun véhicule dans la flotte pour le moment.</p>
+            <a class="rv-btn rv-btn-primary" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
+        </div>
+    }
+</section>
+
+<!-- GESTION -->
+<section id="gerer" class="rv-manage">
+    <div class="rv-manage-inner">
+        <div class="rv-manage-head">
+            <div class="rv-eyebrow">Espace gestion</div>
+            <h2>Tout piloter depuis un seul tableau de bord</h2>
+            <p>Ajoutez, modifiez et suivez vos véhicules, vos clients et vos réservations en temps réel.</p>
+        </div>
+        <div class="rv-manage-grid">
+            <a class="rv-manage-card" asp-controller="Car" asp-action="Index">
+                <div class="rv-manage-icon">🚗</div>
+                <h3>Voitures</h3>
+                <p>Ajoutez et mettez à jour votre flotte : modèles, tarifs, disponibilité et carburant.</p>
+                <div class="rv-manage-foot">
+                    <span class="rv-manage-action">Gérer la flotte →</span>
+                    <span class="rv-manage-count">@Model.CarCount véhicules</span>
+                </div>
+            </a>
+            <a class="rv-manage-card" asp-controller="Client" asp-action="Index">
+                <div class="rv-manage-icon">👥</div>
+                <h3>Clients</h3>
+                <p>Centralisez les fiches clients, leurs coordonnées et leur historique de location.</p>
+                <div class="rv-manage-foot">
+                    <span class="rv-manage-action">Voir les clients →</span>
+                    <span class="rv-manage-count">@Model.ClientCount clients</span>
+                </div>
+            </a>
+            <a class="rv-manage-card" asp-controller="Reservation" asp-action="Index">
+                <div class="rv-manage-icon">📅</div>
+                <h3>Réservations</h3>
+                <p>Créez, modifiez et suivez chaque réservation du début à la restitution.</p>
+                <div class="rv-manage-foot">
+                    <span class="rv-manage-action">Suivre les réservations →</span>
+                    <span class="rv-manage-count">@Model.ActiveReservationCount en cours</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="rv-wide rv-cta">
+    <div class="rv-cta-inner">
+        <div>
+            <h2>Prêt à prendre la route ?</h2>
+            <p>Créez votre réservation en moins de deux minutes. Aucun frais caché.</p>
+        </div>
+        <a class="rv-btn" asp-controller="Reservation" asp-action="Create">Réserver maintenant</a>
+    </div>
+</section>

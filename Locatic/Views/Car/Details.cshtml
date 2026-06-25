@@ -1,35 +1,48 @@
 @model Locatic.Models.Car
-
 @{
     ViewData["Title"] = "Détails voiture";
 }
 
-<h1>Détails</h1>
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>@Model.CarModel.Brand.Name @Model.CarModel.Name</h1>
+            <p>@Model.LicensePlate · @Model.Category()</p>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
 
-<dl class="row">
-    <dt class="col-sm-3">Plaque d'immatriculation</dt>
-    <dd class="col-sm-9">@Model.LicensePlate</dd>
+    <div class="rv-card rv-card-pad" style="max-width:680px">
+        <img src="@Model.ImageUrl()" alt="@Model.CarModel.Brand.Name @Model.CarModel.Name"
+             style="width:100%;height:280px;object-fit:cover;border-radius:14px;margin-bottom:26px" />
+        <dl class="rv-dl">
+            <dt>Plaque</dt>
+            <dd>@Model.LicensePlate</dd>
 
-    <dt class="col-sm-3">Marque</dt>
-    <dd class="col-sm-9">@Model.CarModel.Brand.Name</dd>
+            <dt>Marque</dt>
+            <dd>@Model.CarModel.Brand.Name</dd>
 
-    <dt class="col-sm-3">Modèle</dt>
-    <dd class="col-sm-9">@Model.CarModel.Name</dd>
+            <dt>Modèle</dt>
+            <dd>@Model.CarModel.Name</dd>
 
-    <dt class="col-sm-3">Année</dt>
-    <dd class="col-sm-9">@Model.Year</dd>
+            <dt>Année</dt>
+            <dd>@Model.Year</dd>
 
-    <dt class="col-sm-3">Carburant</dt>
-    <dd class="col-sm-9">@Model.FuelType</dd>
+            <dt>Carburant</dt>
+            <dd>@Model.FuelType.Icon() @Model.FuelType.FrenchLabel()</dd>
 
-    <dt class="col-sm-3">Nombre de places</dt>
-    <dd class="col-sm-9">@Model.NumberOfSeats</dd>
+            <dt>Nombre de places</dt>
+            <dd>@Model.NumberOfSeats</dd>
 
-    <dt class="col-sm-3">Prix par jour</dt>
-    <dd class="col-sm-9">@Model.DailyPrice.ToString("C")</dd>
-</dl>
+            <dt>Prix par jour</dt>
+            <dd class="rv-car-price">@Model.DailyPrice.ToString("0")€</dd>
+        </dl>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Modifier</a>
-    <a asp-action="Index" class="btn btn-secondary">Retour</a>
+        <div class="rv-form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="rv-btn rv-btn-primary">Modifier</a>
+            <a asp-controller="Reservation" asp-action="Create" class="rv-btn rv-btn-ghost">Réserver ce véhicule</a>
+            <a asp-action="Index" class="rv-btn rv-btn-light">Retour</a>
+        </div>
+    </div>
 </div>
