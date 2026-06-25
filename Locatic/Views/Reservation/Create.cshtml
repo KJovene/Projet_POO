@@ -1,0 +1,51 @@
+@model Locatic.Models.ViewModels.ReservationFormVM
+
+@{
+    ViewData["Title"] = "Ajouter une réservation";
+    var minDate = DateTime.Today.ToString("yyyy-MM-dd");
+}
+
+<h1>Ajouter une réservation</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="ClientId" class="form-label"></label>
+                <select asp-for="ClientId" asp-items="ViewBag.ClientId" class="form-select">
+                    <option value="">-- Sélectionner un client --</option>
+                </select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CarId" class="form-label"></label>
+                <select asp-for="CarId" asp-items="ViewBag.CarId" class="form-select">
+                    <option value="">-- Sélectionner une voiture --</option>
+                </select>
+                <span asp-validation-for="CarId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="StartDate" class="form-label"></label>
+                <input asp-for="StartDate" class="form-control" type="date" min="@minDate" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="EndDate" class="form-label"></label>
+                <input asp-for="EndDate" class="form-control" type="date" min="@minDate" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+            <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
