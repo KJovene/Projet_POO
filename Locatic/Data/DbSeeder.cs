@@ -8,6 +8,8 @@ namespace Locatic.Data
         {
             SeedBrandsAndModels(context);
             SeedCars(context);
+            SeedClients(context);
+            SeedReservations(context);
         }
 
         private static void SeedBrandsAndModels(AppDbContext context)
@@ -73,6 +75,49 @@ namespace Locatic.Data
             };
 
             context.Cars.AddRange(cars);
+            context.SaveChanges();
+        }
+
+        private static void SeedClients(AppDbContext context)
+        {
+            if (context.Clients.Any()) return;
+
+            var clients = new List<Client>
+            {
+                new() { FirstName = "Lucas",  LastName = "Martin",   Email = "lucas.martin@locatic.fr",   PhoneNumber = "06 12 34 56 78" },
+                new() { FirstName = "Emma",   LastName = "Bernard",  Email = "emma.bernard@locatic.fr",  PhoneNumber = "06 23 45 67 89" },
+                new() { FirstName = "Hugo",   LastName = "Dubois",   Email = "hugo.dubois@locatic.fr",   PhoneNumber = "06 34 56 78 90" },
+                new() { FirstName = "Chloe",  LastName = "Thomas",   Email = "chloe.thomas@locatic.fr",  PhoneNumber = "06 45 67 89 01" },
+                new() { FirstName = "Nathan", LastName = "Robert",   Email = "nathan.robert@locatic.fr", PhoneNumber = "06 56 78 90 12" },
+                new() { FirstName = "Lea",    LastName = "Petit",    Email = "lea.petit@locatic.fr",     PhoneNumber = "06 67 89 01 23" },
+                new() { FirstName = "Jules",  LastName = "Richard",  Email = "jules.richard@locatic.fr", PhoneNumber = "06 78 90 12 34" },
+                new() { FirstName = "Ines",   LastName = "Durand",   Email = "ines.durand@locatic.fr",   PhoneNumber = "06 89 01 23 45" },
+            };
+
+            context.Clients.AddRange(clients);
+            context.SaveChanges();
+        }
+
+        private static void SeedReservations(AppDbContext context)
+        {
+            if (context.Reservations.Any()) return;
+
+            var clients = context.Clients.ToDictionary(client => client.Email);
+            var cars = context.Cars.ToDictionary(car => car.LicensePlate);
+
+            var reservations = new List<Reservation>
+            {
+                new() { ClientId = clients["lucas.martin@locatic.fr"].Id,   CarId = cars["FY-945-NT"].Id, StartDate = new DateTime(2026, 7, 1),  EndDate = new DateTime(2026, 7, 5) },
+                new() { ClientId = clients["emma.bernard@locatic.fr"].Id,  CarId = cars["AB-123-CD"].Id, StartDate = new DateTime(2026, 7, 3),  EndDate = new DateTime(2026, 7, 6) },
+                new() { ClientId = clients["hugo.dubois@locatic.fr"].Id,   CarId = cars["CD-345-EF"].Id, StartDate = new DateTime(2026, 7, 7),  EndDate = new DateTime(2026, 7, 10) },
+                new() { ClientId = clients["chloe.thomas@locatic.fr"].Id,  CarId = cars["FG-678-HI"].Id, StartDate = new DateTime(2026, 7, 8),  EndDate = new DateTime(2026, 7, 12) },
+                new() { ClientId = clients["nathan.robert@locatic.fr"].Id, CarId = cars["LM-234-NO"].Id, StartDate = new DateTime(2026, 7, 10), EndDate = new DateTime(2026, 7, 13) },
+                new() { ClientId = clients["lea.petit@locatic.fr"].Id,     CarId = cars["OP-567-QR"].Id, StartDate = new DateTime(2026, 7, 14), EndDate = new DateTime(2026, 7, 18) },
+                new() { ClientId = clients["jules.richard@locatic.fr"].Id, CarId = cars["UV-123-WX"].Id, StartDate = new DateTime(2026, 7, 15), EndDate = new DateTime(2026, 7, 20) },
+                new() { ClientId = clients["ines.durand@locatic.fr"].Id,   CarId = cars["BC-890-DE"].Id, StartDate = new DateTime(2026, 7, 21), EndDate = new DateTime(2026, 7, 24) },
+            };
+
+            context.Reservations.AddRange(reservations);
             context.SaveChanges();
         }
     }
