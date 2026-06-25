@@ -1,0 +1,35 @@
+@model Locatic.Models.Client
+
+@{
+    ViewData["Title"] = "Supprimer un client";
+    var deleteError = ViewData["DeleteError"] as string;
+}
+
+<h1>Supprimer un client</h1>
+
+@if (!string.IsNullOrWhiteSpace(deleteError))
+{
+    <div class="alert alert-danger">@deleteError</div>
+}
+
+<p class="text-danger">Êtes-vous sûr de vouloir supprimer ce client ?</p>
+
+<dl class="row">
+    <dt class="col-sm-3">Prénom</dt>
+    <dd class="col-sm-9">@Model.FirstName</dd>
+
+    <dt class="col-sm-3">Nom</dt>
+    <dd class="col-sm-9">@Model.LastName</dd>
+
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+
+    <dt class="col-sm-3">Téléphone</dt>
+    <dd class="col-sm-9">@Model.PhoneNumber</dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>
