@@ -1,0 +1,42 @@
+@model Locatic.Models.Car
+@{
+    ViewData["Title"] = "Supprimer une voiture";
+}
+
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>Supprimer une voiture</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
+
+    <div class="rv-card rv-card-pad" style="max-width:680px">
+        <div class="rv-alert rv-alert-danger">
+            ⚠️ Êtes-vous sûr de vouloir supprimer cette voiture ? Cette action est définitive.
+        </div>
+
+        <dl class="rv-dl">
+            <dt>Plaque</dt>
+            <dd>@Model.LicensePlate</dd>
+
+            <dt>Marque / Modèle</dt>
+            <dd>@Model.CarModel.Brand.Name @Model.CarModel.Name</dd>
+
+            <dt>Année</dt>
+            <dd>@Model.Year</dd>
+
+            <dt>Prix par jour</dt>
+            <dd>@Model.DailyPrice.ToString("0")€</dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-danger">Supprimer définitivement</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>

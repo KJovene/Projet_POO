@@ -1,0 +1,81 @@
+@model IEnumerable<Locatic.Models.Reservation>
+@{
+    ViewData["Title"] = "Réservations";
+    var today = DateTime.Today;
+}
+
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Planning</div>
+            <h1>Réservations</h1>
+            <p>@Model.Count() réservation(s) au total.</p>
+        </div>
+        <a class="rv-btn rv-btn-primary" asp-action="Create">+ Nouvelle réservation</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="rv-table-wrap">
+            <table class="rv-table">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Voiture</th>
+                        <th>Période</th>
+                        <th>Statut</th>
+                        <th style="text-align:right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in Model)
+                    {
+                        string statusLabel;
+                        string statusClass;
+                        if (reservation.EndDate.Date < today)
+                        {
+                            statusLabel = "Terminée";
+                            statusClass = "rv-badge-soft";
+                        }
+                        else if (reservation.StartDate.Date > today)
+                        {
+                            statusLabel = "À venir";
+                            statusClass = "";
+                        }
+                        else
+                        {
+                            statusLabel = "En cours";
+                            statusClass = "rv-badge-success";
+                        }
+                        <tr>
+                            <td class="rv-strong">@reservation.Client.LastName @reservation.Client.FirstName</td>
+                            <td>
+                                @reservation.Car.CarModel.Brand.Name @reservation.Car.CarModel.Name
+                                <div class="rv-sub">@reservation.Car.LicensePlate</div>
+                            </td>
+                            <td>
+                                @reservation.StartDate.ToString("dd/MM/yyyy")
+                                <span class="rv-sub">→ @reservation.EndDate.ToString("dd/MM/yyyy")</span>
+                            </td>
+                            <td><span class="rv-badge @statusClass">@statusLabel</span></td>
+                            <td>
+                                <div class="rv-actions">
+                                    <a class="rv-btn rv-btn-light rv-btn-sm" asp-action="Edit" asp-route-id="@reservation.Id">Modifier</a>
+                                    <a class="rv-btn rv-btn-danger rv-btn-sm" asp-action="Delete" asp-route-id="@reservation.Id">Supprimer</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="rv-card rv-empty">
+            <div class="rv-empty-icon">📅</div>
+            <p>Aucune réservation pour le moment.</p>
+            <a class="rv-btn rv-btn-primary" asp-action="Create">Créer la première réservation</a>
+        </div>
+    }
+</div>

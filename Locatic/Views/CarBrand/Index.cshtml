@@ -1,0 +1,55 @@
+@model IEnumerable<Locatic.Models.CarBrand>
+@{
+    ViewData["Title"] = "Marques";
+}
+
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Centre de contrôle</div>
+            <h1>Marques</h1>
+            <p>@Model.Count() marque(s) dans le référentiel.</p>
+        </div>
+        <a class="rv-btn rv-btn-primary" asp-action="Create">+ Ajouter une marque</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="rv-table-wrap">
+            <table class="rv-table">
+                <thead>
+                    <tr>
+                        <th>Marque</th>
+                        <th>Pays</th>
+                        <th>Modèles</th>
+                        <th style="text-align:right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var brand in Model)
+                    {
+                        <tr>
+                            <td class="rv-strong">@brand.Name</td>
+                            <td>@brand.Country</td>
+                            <td><span class="rv-badge">@brand.CarModels.Count modèle(s)</span></td>
+                            <td>
+                                <div class="rv-actions">
+                                    <a class="rv-btn rv-btn-light rv-btn-sm" asp-action="Edit" asp-route-id="@brand.Id">Modifier</a>
+                                    <a class="rv-btn rv-btn-danger rv-btn-sm" asp-action="Delete" asp-route-id="@brand.Id">Supprimer</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="rv-card rv-empty">
+            <div class="rv-empty-icon">🏷️</div>
+            <p>Aucune marque enregistrée.</p>
+            <a class="rv-btn rv-btn-primary" asp-action="Create">Ajouter la première marque</a>
+        </div>
+    }
+</div>

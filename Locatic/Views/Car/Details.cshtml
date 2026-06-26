@@ -1,0 +1,48 @@
+@model Locatic.Models.Car
+@{
+    ViewData["Title"] = "Détails voiture";
+}
+
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>@Model.CarModel.Brand.Name @Model.CarModel.Name</h1>
+            <p>@Model.LicensePlate · @Model.Category()</p>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
+
+    <div class="rv-card rv-card-pad" style="max-width:680px">
+        <img src="@Model.ImageUrl()" alt="@Model.CarModel.Brand.Name @Model.CarModel.Name"
+             style="width:100%;height:280px;object-fit:cover;border-radius:14px;margin-bottom:26px" />
+        <dl class="rv-dl">
+            <dt>Plaque</dt>
+            <dd>@Model.LicensePlate</dd>
+
+            <dt>Marque</dt>
+            <dd>@Model.CarModel.Brand.Name</dd>
+
+            <dt>Modèle</dt>
+            <dd>@Model.CarModel.Name</dd>
+
+            <dt>Année</dt>
+            <dd>@Model.Year</dd>
+
+            <dt>Carburant</dt>
+            <dd>@Model.FuelType.Icon() @Model.FuelType.FrenchLabel()</dd>
+
+            <dt>Nombre de places</dt>
+            <dd>@Model.NumberOfSeats</dd>
+
+            <dt>Prix par jour</dt>
+            <dd class="rv-car-price">@Model.DailyPrice.ToString("0")€</dd>
+        </dl>
+
+        <div class="rv-form-actions">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="rv-btn rv-btn-primary">Modifier</a>
+            <a asp-controller="Reservation" asp-action="Create" class="rv-btn rv-btn-ghost">Réserver ce véhicule</a>
+            <a asp-action="Index" class="rv-btn rv-btn-light">Retour</a>
+        </div>
+    </div>
+</div>

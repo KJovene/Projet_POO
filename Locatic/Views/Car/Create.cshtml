@@ -1,0 +1,67 @@
+@model Locatic.Models.ViewModels.CarCreateVM
+@{
+    ViewData["Title"] = "Ajouter une voiture";
+}
+
+<div class="rv-shell">
+    <div class="rv-page-head">
+        <div>
+            <div class="rv-eyebrow">Flotte</div>
+            <h1>Ajouter une voiture</h1>
+        </div>
+        <a class="rv-btn rv-btn-light" asp-action="Index">← Retour</a>
+    </div>
+
+    <div class="rv-card rv-card-pad rv-form">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="rv-field">
+                <label asp-for="LicensePlate" class="form-label"></label>
+                <input asp-for="LicensePlate" class="form-control" />
+                <span asp-validation-for="LicensePlate" class="text-danger"></span>
+            </div>
+
+            <div class="rv-field">
+                <label asp-for="CarModelId" class="form-label"></label>
+                <select asp-for="CarModelId" asp-items="ViewBag.CarModelId" class="form-select">
+                    <option value="">-- Sélectionner un modèle --</option>
+                </select>
+                <span asp-validation-for="CarModelId" class="text-danger"></span>
+            </div>
+
+            <div class="rv-field">
+                <label asp-for="Year" class="form-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+
+            <div class="rv-field">
+                <label asp-for="FuelType" class="form-label"></label>
+                <select asp-for="FuelType" asp-items="Html.GetEnumSelectList<Fuel>()" class="form-select"></select>
+                <span asp-validation-for="FuelType" class="text-danger"></span>
+            </div>
+
+            <div class="rv-field">
+                <label asp-for="NumberOfSeats" class="form-label"></label>
+                <input asp-for="NumberOfSeats" class="form-control" />
+                <span asp-validation-for="NumberOfSeats" class="text-danger"></span>
+            </div>
+
+            <div class="rv-field">
+                <label asp-for="DailyPrice" class="form-label"></label>
+                <input asp-for="DailyPrice" class="form-control" />
+                <span asp-validation-for="DailyPrice" class="text-danger"></span>
+            </div>
+
+            <div class="rv-form-actions">
+                <button type="submit" class="rv-btn rv-btn-primary">Ajouter</button>
+                <a asp-action="Index" class="rv-btn rv-btn-light">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
