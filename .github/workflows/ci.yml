@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+env:
+  DOTNET_VERSION: "8.0.x"
+
+jobs:
+  # Stage 1 : Tests
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
+        run: dotnet restore Locatic.sln
+      - name: Build
+        run: dotnet build Locatic.sln --no-restore --configuration Release
+      - name: Run tests
+        run: |
+          set -o pipefail
+          dotnet test Locatic.sln --no-build --configuration Release \
+            --logger "trx;LogFileName=test-results.trx" 2>&1 | tee test-output.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-output
+          path: |
+            test-output.txt
+            "**/TestResults/*.trx"
+
+  # Stage 2 : Build image Docker
+  build:
+    needs: test
+    uses: ./.github/workflows/reusable-docker.yml
+    with:
+      image-name: locatic
+      context: ./Locatic
+
+  # Stage 3 : Scan de sécurité
+  security:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan application files
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: "fs"
+          scan-ref: "./Locatic"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+          format: "table"
+
+  # Stage 4 : Deploy vers l'environnement dev (branche dev, simulé)
+  deploy-dev:
+    needs: [build, security]
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Use secrets
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          echo "Secrets are masked in logs"
+          echo "DB_PASSWORD length: ${#DB_PASSWORD}"
+      - run: echo "Deploying version ${{ github.sha }} to dev..."
+
+  # Stage 5 : Deploy vers l'environnement prod (branche main, simulé)
+  deploy-prod:
+    needs: [build, security]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Use secrets
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          echo "Secrets are masked in logs"
+          echo "DB_PASSWORD length: ${#DB_PASSWORD}"
+      - run: echo "Deploying version ${{ github.sha }} to prod..."
