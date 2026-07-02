@@ -1,0 +1,6 @@
+# CVE-2025-6965 : troncation d'entier dans SQLite (SQLitePCLRaw.lib.e_sqlite3),
+# tiré transitivement par Microsoft.EntityFrameworkCore.Sqlite 8.0.26.
+# Aucune version corrigée n'est disponible en amont à ce jour (« Fixed Version »
+# vide côté Trivy). Risque accepté : SQLite est utilisé en local via un fichier
+# de base non exposé au réseau. À réévaluer lors de la prochaine MAJ d'EF Core.
+CVE-2025-6965

@@ -4,3 +4,6 @@
 
 bin/
 obj/
+
+# Sortie de build compilée (ne doit pas être versionnée)
+build-validate/

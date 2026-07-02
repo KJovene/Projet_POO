@@ -57,6 +57,7 @@ jobs:
           severity: "HIGH,CRITICAL"
           exit-code: "1"
           format: "table"
+          trivyignores: ".trivyignore"
 
   # Stage 4 : Deploy vers l'environnement dev (branche dev, simulé)
   deploy-dev:
