@@ -9,10 +9,9 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  type: NodePort
+  # ClusterIP : l'application n'est plus exposée directement, Nginx est le point d'entrée (voir bloc nginx ci-dessous).
+  type: ClusterIP
   port: 8080
-  # Port fixe pour une exposition locale reproductible (30000-32767).
-  nodePort: 30080
 
 config:
   aspnetcoreEnvironment: Production
@@ -54,3 +53,37 @@ probes:
     path: /health
     initialDelaySeconds: 15
     periodSeconds: 20
+
+# Reverse-proxy devant l'application : seul point d'entrée utilisateur exposé.
+nginx:
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: NodePort
+    port: 80
+    # Port fixe pour une exposition locale reproductible (30000-32767).
+    nodePort: 30080
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+  probes:
+    readiness:
+      path: /
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    liveness:
+      path: /
+      initialDelaySeconds: 10
+      periodSeconds: 20
+
+# Annotations Prometheus (étape 12). Désactivé par défaut : l'application n'expose
+# pas encore de endpoint /metrics (seulement /health), l'activer une fois l'instrumentation ajoutée.
+metrics:
+  enabled: false

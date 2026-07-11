@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "devops-app.fullname" . }}-nginx-svc
+  labels:
+    {{- include "devops-app.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.nginx.service.type }}
+  selector:
+    {{- include "devops-app.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: nginx
+  ports:
+    - name: http
+      port: {{ .Values.nginx.service.port }}
+      targetPort: http
+      {{- if and (eq .Values.nginx.service.type "NodePort") .Values.nginx.service.nodePort }}
+      nodePort: {{ .Values.nginx.service.nodePort }}
+      {{- end }}

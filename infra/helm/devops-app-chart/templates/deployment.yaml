@@ -20,6 +20,12 @@ spec:
       labels:
         {{- include "devops-app.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: app
+      {{- if .Values.metrics.enabled }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.config.appPort }}"
+        prometheus.io/path: "/metrics"
+      {{- end }}
     spec:
       containers:
         - name: app

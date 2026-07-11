@@ -22,3 +22,11 @@
     --context {{ tf_handoff.kube_context }}
     --timeout=120s
   changed_when: false
+
+- name: Attendre que le reverse-proxy Nginx soit prêt
+  ansible.builtin.command: >
+    kubectl rollout status deployment/{{ tf_handoff.app_name }}-nginx
+    -n {{ tf_handoff.namespace }}
+    --context {{ tf_handoff.kube_context }}
+    --timeout=120s
+  changed_when: false

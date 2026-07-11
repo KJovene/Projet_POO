@@ -1,10 +1,10 @@
-Locatic est déployé dans le namespace {{ .Release.Namespace }}.
+Locatic est déployé dans le namespace {{ .Release.Namespace }}, derrière Nginx (reverse-proxy, point d'entrée unique).
 
 Exposition locale (minikube) :
-{{- if eq .Values.service.type "NodePort" }}
-  minikube service {{ include "devops-app.fullname" . }}-svc -n {{ .Release.Namespace }} --url
+{{- if eq .Values.nginx.service.type "NodePort" }}
+  minikube service {{ include "devops-app.fullname" . }}-nginx-svc -n {{ .Release.Namespace }} --url
 {{- else }}
-  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "devops-app.fullname" . }}-svc 18080:{{ .Values.service.port }}
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "devops-app.fullname" . }}-nginx-svc 18080:{{ .Values.nginx.service.port }}
 {{- end }}
 
 Vérification depuis le poste de travail :

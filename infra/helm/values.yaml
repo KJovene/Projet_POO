@@ -6,9 +6,9 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  type: NodePort
+  # ClusterIP : l'application n'est plus exposée directement, Nginx est le point d'entrée.
+  type: ClusterIP
   port: 8080
-  nodePort: 30080
 
 postgresql:
   enabled: false
