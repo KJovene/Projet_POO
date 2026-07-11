@@ -1,0 +1,19 @@
+- name: Vérifier la présence des binaires requis ({{ required_binaries | join(', ') }})
+  ansible.builtin.command: "command -v {{ item }}"
+  register: binary_check
+  changed_when: false
+  failed_when: binary_check.rc != 0
+  loop: "{{ required_binaries }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Vérifier l'état de minikube
+  ansible.builtin.command: minikube status --format='{{ '{{' }}.Host{{ '}}' }}'
+  register: minikube_status
+  changed_when: false
+  failed_when: minikube_status.rc != 0 or 'Running' not in minikube_status.stdout
+
+- name: Échouer avec un message explicite si minikube n'est pas démarré
+  ansible.builtin.fail:
+    msg: "minikube n'est pas démarré. Lancez `minikube start` puis relancez ce playbook."
+  when: minikube_status.rc != 0 or 'Running' not in minikube_status.stdout

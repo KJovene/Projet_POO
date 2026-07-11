@@ -1,0 +1,13 @@
+# Chemin du module Terraform qui prépare le namespace + le PVC SQLite (étape 8).
+terraform_kubernetes_dir: "{{ playbook_dir }}/../kubernetes/terraform"
+
+# Binaires requis sur le poste local pour dérouler l'orchestration.
+required_binaries:
+  - terraform
+  - kubectl
+  - helm
+  - minikube
+
+# Image applicative à charger dans minikube (pas de registry : correspond au
+# defaut image.repository/image.tag de infra/helm/devops-app-chart/values.yaml).
+app_image: "locatic:local"

@@ -1,8 +1,7 @@
-- import_playbook: bootstrap-python.yml
-
-- name: Configurer les serveurs web provisionnés par Terraform
-  hosts: webservers
+- name: Orchestrer le déploiement local sur minikube (Terraform -> Helm)
+  hosts: localhost
   gather_facts: false
   roles:
-    - base
-    - nginx
+    - prereqs
+    - terraform_output
+    - deploy_app
