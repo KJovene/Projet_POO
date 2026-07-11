@@ -1,0 +1,14 @@
+"all":
+  "children":
+    "webservers":
+      "hosts":
+        "locatic-dev-web":
+          "ansible_connection": "docker"
+          "ansible_python_interpreter": "/usr/bin/python3"
+          "nginx_upstream": "locatic-dev-app:8080"
+          "public_port": 8080
+          "public_url": "http://localhost:8080"
+  "vars":
+    "app_environment": "dev"
+    "app_log_level": "Information"
+    "app_name": "locatic"

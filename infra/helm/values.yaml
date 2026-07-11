@@ -1,0 +1,21 @@
+# Overlay COMMUN à tous les environnements (branché en premier avec -f).
+# Réglages spécifiques à un environnement : voir values-dev/prod.yaml.
+image:
+  repository: locatic
+  tag: "local"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30080
+
+postgresql:
+  enabled: false
+
+secret:
+  enabled: false
+
+persistence:
+  enabled: true
+  mountPath: /app/data

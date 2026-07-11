@@ -1,0 +1,23 @@
+groups:
+  # Supervision de l'infrastructure locale (node-exporter).
+  # La disponibilité de Locatic est gérée par les sondes readiness/liveness
+  # de Kubernetes (redémarrage automatique du pod en cas d'échec de /health).
+  - name: infra-alerts
+    rules:
+      - alert: HighCPU
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU > 80% sur {{ $labels.instance }} depuis 5 min."
+
+      - alert: DiskAlmostFull
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk almost full"
+          description: "Moins de 15% d'espace disque disponible sur {{ $labels.instance }}."

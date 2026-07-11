@@ -1,0 +1,5 @@
+nginx_conf_path: /etc/nginx/conf.d/default.conf
+
+# Cible du reverse-proxy (host:port du conteneur Locatic).
+# Surchargé par l'inventaire généré depuis Terraform (nginx_upstream).
+nginx_upstream: locatic-dev-app:8080

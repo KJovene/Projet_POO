@@ -1,0 +1,12 @@
+- name: Déployer la configuration reverse-proxy Nginx
+  template:
+    src: default.conf.j2
+    dest: "{{ nginx_conf_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: reload nginx
+
+- name: Valider la configuration Nginx
+  command: nginx -t
+  changed_when: false

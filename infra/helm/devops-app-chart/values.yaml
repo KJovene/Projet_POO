@@ -1,0 +1,56 @@
+# Valeurs par défaut du chart Locatic (profil "dev" adapté à minikube).
+# Les overlays infra/helm/values-<env>.yaml surchargent ces valeurs.
+replicaCount: 1
+
+image:
+  repository: locatic
+  tag: "local"
+  # Never : on charge l'image dans minikube (minikube image load), pas de pull registry.
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8080
+  # Port fixe pour une exposition locale reproductible (30000-32767).
+  nodePort: 30080
+
+config:
+  aspnetcoreEnvironment: Production
+  aspnetcoreUrls: "http://+:8080"
+  appPort: 8080
+  logLevel: Information
+  # SQLite stocké sur un volume dédié (voir persistence) pour survivre aux redémarrages du conteneur.
+  connectionString: "Data Source=/app/data/locatic.db"
+
+# Volume pour la base SQLite.
+# - existingClaim vide  -> emptyDir (démo autonome, sans Terraform).
+# - existingClaim défini -> PVC préparé par Terraform (stockage persistant).
+persistence:
+  enabled: true
+  mountPath: /app/data
+  existingClaim: ""
+
+# L'application utilise SQLite : pas de PostgreSQL ni de secret de base de données.
+postgresql:
+  enabled: false
+
+secret:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+probes:
+  readiness:
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    path: /health
+    initialDelaySeconds: 15
+    periodSeconds: 20

@@ -7,3 +7,26 @@ obj/
 
 # Sortie de build compilée (ne doit pas être versionnée)
 build-validate/
+
+# Secrets & fichiers d'environnement locaux
+.env
+.env.*
+!.env.example
+
+# État & cache Terraform (jamais versionnés)
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+**/terraform.tfstate.d/
+
+# Variables Terraform locales (garder uniquement les .example)
+*.tfvars
+!*.tfvars.example
+
+# Clés et certificats
+*.pem
+*.key
+id_rsa*
+*.p12
+*.pfx
+kubeconfig
