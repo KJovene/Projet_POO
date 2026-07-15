@@ -1,5 +1,7 @@
 - name: Vérifier la présence des binaires requis ({{ required_binaries | join(', ') }})
-  ansible.builtin.command: "command -v {{ item }}"
+  ansible.builtin.shell: "command -v {{ item }}"
+  args:
+    executable: /bin/bash
   register: binary_check
   changed_when: false
   failed_when: binary_check.rc != 0
@@ -17,3 +19,31 @@
   ansible.builtin.fail:
     msg: "minikube n'est pas démarré. Lancez `minikube start` puis relancez ce playbook."
   when: minikube_status.rc != 0 or 'Running' not in minikube_status.stdout
+
+- name: Vérifier que kubectl a bien un contexte courant
+  ansible.builtin.command: kubectl config current-context
+  register: kubectl_current_context
+  changed_when: false
+  failed_when: false
+
+- name: Échouer si kubectl n'a pas de contexte configuré
+  ansible.builtin.fail:
+    msg: >
+      kubectl n'a pas de contexte configuré dans cette session WSL.
+      Exécutez `minikube update-context` ou exportez un KUBECONFIG valide,
+      puis vérifiez avec `kubectl config current-context`.
+  when: kubectl_current_context.rc != 0 or kubectl_current_context.stdout | trim == ''
+
+- name: Vérifier que kubectl peut joindre le cluster minikube
+  ansible.builtin.command: kubectl cluster-info
+  register: kubectl_cluster_info
+  changed_when: false
+  failed_when: false
+
+- name: Échouer si kubectl ne peut pas joindre l'API Kubernetes
+  ansible.builtin.fail:
+    msg: >
+      kubectl ne parvient pas à joindre le cluster Kubernetes.
+      Dans WSL, cela signifie souvent que le contexte minikube n'est pas chargé.
+      Vérifiez `kubectl config current-context`, `kubectl cluster-info` et `minikube status`.
+  when: kubectl_cluster_info.rc != 0

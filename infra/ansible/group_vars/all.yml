@@ -11,3 +11,7 @@ required_binaries:
 # Image applicative à charger dans minikube (pas de registry : correspond au
 # defaut image.repository/image.tag de infra/helm/devops-app-chart/values.yaml).
 app_image: "locatic:local"
+
+monitoring_namespace: "monitoring"
+monitoring_release_name: "kube-prometheus-stack"
+monitoring_values_file: "{{ playbook_dir }}/../monitoring/kube-prometheus-stack-values.yaml"

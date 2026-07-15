@@ -1,5 +1,6 @@
 using Locatic.Data;
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseHttpMetrics();
 
 app.UseAuthorization();
 
@@ -40,5 +42,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHealthChecks("/health");
+app.MapMetrics("/metrics");
 
 app.Run();

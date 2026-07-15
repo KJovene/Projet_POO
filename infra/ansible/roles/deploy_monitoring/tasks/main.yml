@@ -1,0 +1,33 @@
+- name: Ajouter le repo Helm Prometheus Community
+  ansible.builtin.command: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  register: monitoring_repo_add
+  changed_when: "'has been added' in monitoring_repo_add.stdout"
+
+- name: Mettre à jour les repos Helm
+  ansible.builtin.command: helm repo update
+  changed_when: false
+
+- name: Installer ou mettre à jour kube-prometheus-stack
+  ansible.builtin.command: >
+    helm upgrade --install {{ monitoring_release_name }} prometheus-community/kube-prometheus-stack
+    -n {{ monitoring_namespace }} --create-namespace
+    --kube-context {{ tf_handoff.kube_context }}
+    -f {{ monitoring_values_file }}
+  register: monitoring_helm_result
+  changed_when: "'has been upgraded' in monitoring_helm_result.stdout or 'has been installed' in monitoring_helm_result.stdout"
+
+- name: Attendre que Prometheus Operator soit prêt
+  ansible.builtin.command: >
+    kubectl rollout status deployment/{{ monitoring_release_name }}-operator
+    -n {{ monitoring_namespace }}
+    --context {{ tf_handoff.kube_context }}
+    --timeout=180s
+  changed_when: false
+
+- name: Attendre que Grafana soit prêt
+  ansible.builtin.command: >
+    kubectl rollout status deployment/{{ monitoring_release_name }}-grafana
+    -n {{ monitoring_namespace }}
+    --context {{ tf_handoff.kube_context }}
+    --timeout=180s
+  changed_when: false

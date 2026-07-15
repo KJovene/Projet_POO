@@ -60,6 +60,10 @@ nginx:
     repository: nginx
     tag: alpine
     pullPolicy: IfNotPresent
+  exporter:
+    repository: nginx/nginx-prometheus-exporter
+    tag: "1.4.1"
+    pullPolicy: IfNotPresent
   replicaCount: 1
   service:
     type: NodePort
@@ -84,6 +88,10 @@ nginx:
       periodSeconds: 20
 
 # Annotations Prometheus (étape 12). Désactivé par défaut : l'application n'expose
-# pas encore de endpoint /metrics (seulement /health), l'activer une fois l'instrumentation ajoutée.
+# un endpoint /metrics, et Nginx est scrappé via son exporter sidecar.
 metrics:
-  enabled: false
+  enabled: true
+
+monitoring:
+  namespace: monitoring
+  releaseLabel: kube-prometheus-stack
