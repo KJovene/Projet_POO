@@ -11,7 +11,9 @@ spec:
     - name: {{ include "devops-app.fullname" . }}.rules
       rules:
         - alert: LocaticAppDown
-          expr: up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*", job=~".*app.*"} == 0
+          expr: |
+            up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*", job=~".*app.*"} == 0
+            or absent(up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*", job=~".*app.*"})
           for: 2m
           labels:
             severity: warning
@@ -20,7 +22,9 @@ spec:
             description: "Le scrape Prometheus de l'application Locatic est en erreur depuis 2 minutes."
 
         - alert: NginxExporterDown
-          expr: up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*nginx.*", job=~".*nginx.*"} == 0
+          expr: |
+            up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*nginx.*", job=~".*nginx.*"} == 0
+            or absent(up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*nginx.*", job=~".*nginx.*"})
           for: 2m
           labels:
             severity: warning

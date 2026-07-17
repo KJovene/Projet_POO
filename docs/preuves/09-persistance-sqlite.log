@@ -1,0 +1,44 @@
+$ kubectl get pods -n locatic-dev
+NAME                             READY   STATUS    RESTARTS   AGE
+locatic-744dd54b54-4655s         1/1     Running   0          116s
+locatic-nginx-7d66744c49-gnnsd   2/2     Running   0          17m
+
+$ curl -s -b cookies -c cookies http://localhost:18080/Client/Create -o form.html
+$ TOKEN=$(grep -o '__RequestVerificationToken[^>]*value="[^"]*"' form.html | sed -E 's/.*value="([^"]*)"/\1/')
+$ curl -s -b cookies -c cookies -X POST http://localhost:18080/Client/Create \
+    --data-urlencode "__RequestVerificationToken=$TOKEN" \
+    --data-urlencode "FirstName=Preuve" \
+    --data-urlencode "LastName=Persistance-SQLite" \
+    --data-urlencode "Email=preuve.persistance@example.com" \
+    --data-urlencode "PhoneNumber=0600000000" \
+    -D headers.txt -o body.html
+$ head -1 headers.txt
+HTTP/1.1 302 Found
+
+--- Vérification AVANT suppression du pod ---
+$ curl -s -b cookies http://localhost:18080/Client | grep -i "Persistance-SQLite"
+                                    <span class="rv-strong">Persistance-SQLite Preuve</span>
+TROUVE: client présent avant suppression du pod
+
+--- Suppression du pod applicatif ---
+$ kubectl delete pod -n locatic-dev -l app.kubernetes.io/component=app
+pod "locatic-744dd54b54-4655s" deleted from locatic-dev namespace
+
+$ kubectl wait --for=condition=Ready pod -n locatic-dev -l app.kubernetes.io/component=app --timeout=90s
+pod/locatic-744dd54b54-hj254 condition met
+
+$ kubectl get pods -n locatic-dev -l app.kubernetes.io/component=app
+NAME                       READY   STATUS    RESTARTS   AGE
+locatic-744dd54b54-hj254   1/1     Running   0          12s
+
+--- Vérification APRES suppression/redémarrage du pod ---
+$ curl -s -i http://localhost:18080/health
+HTTP/1.1 200 OK
+Server: nginx/1.31.3
+Content-Type: text/plain
+
+Healthy
+
+$ curl -s http://localhost:18080/Client | grep -i "Persistance-SQLite"
+                                    <span class="rv-strong">Persistance-SQLite Preuve</span>
+TROUVE: client toujours présent après redémarrage du pod

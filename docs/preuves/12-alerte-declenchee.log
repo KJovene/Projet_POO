@@ -1,0 +1,56 @@
+=== Etat avant ===
+{"state":"unknown"}
+=== Arrêt du déploiement ===
+deployment.apps/locatic scaled
+2026-07-17T10:42:17Z
+=== Alerte firing ===
+{
+  "state": "firing",
+  "name": "LocaticAppDown",
+  "query": "up{job=~\".*app.*\",namespace=\"locatic-dev\",pod=~\"locatic.*\"} == 0 or absent(up{job=~\".*app.*\",namespace=\"locatic-dev\",pod=~\"locatic.*\"})",
+  "duration": 120,
+  "keepFiringFor": 0,
+  "labels": {
+    "severity": "warning"
+  },
+  "annotations": {
+    "description": "Le scrape Prometheus de l'application Locatic est en erreur depuis 2 minutes.",
+    "summary": "Locatic indisponible"
+  },
+  "alerts": [
+    {
+      "labels": {
+        "alertname": "LocaticAppDown",
+        "namespace": "locatic-dev",
+        "severity": "warning"
+      },
+      "annotations": {
+        "description": "Le scrape Prometheus de l'application Locatic est en erreur depuis 2 minutes.",
+        "summary": "Locatic indisponible"
+      },
+      "state": "firing",
+      "activeAt": "2026-07-17T10:43:00.620059974Z",
+      "value": "1e+00"
+    }
+  ],
+  "health": "ok",
+  "evaluationTime": 0.000531708,
+  "lastEvaluation": "2026-07-17T10:45:00.62592375Z",
+  "type": "alerting"
+}
+
+=== Alertmanager ===
+{"status":"active","startsAt":"2026-07-17T10:45:00.620Z"}
+
+=== Rétablissement ===
+deployment.apps/locatic scaled
+Waiting for deployment "locatic" rollout to finish: 0 of 1 updated replicas are available...
+deployment "locatic" successfully rolled out
+=== Etat de la règle après rétablissement ===
+{
+  "name": "LocaticAppDown",
+  "state": "inactive",
+  "alerts": []
+}
+
+=== Alertmanager (filtered=false pour inclure les résolues) ===
