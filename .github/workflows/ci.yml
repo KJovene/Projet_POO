@@ -35,13 +35,17 @@ jobs:
             test-output.txt
             "**/TestResults/*.trx"
 
-  # Stage 2 : Build image Docker
+  # Stage 2 : Build image Docker (publiée dans la registry uniquement sur main)
   build:
     needs: test
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/reusable-docker.yml
     with:
       image-name: locatic
       context: ./Locatic
+      push: ${{ github.ref == 'refs/heads/main' }}
 
   # Stage 3 : Scan de sécurité
   security:
