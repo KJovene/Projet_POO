@@ -1,0 +1,18 @@
+Preuves de publication GHCR apres merge sur `main`.
+
+1. Capture [capture/04a-github-packages-list-locatic.png](capture/04a-github-packages-list-locatic.png)
+
+	Constat : l'onglet `Packages` du compte `KJovene` affiche bien un package `locatic` publie depuis le depot `KJovene/Projet_POO`. La capture montre que la publication GHCR a cree une entree visible dans GitHub Packages.
+
+2. Capture [capture/04b-ghcr-package-locatic-details.png](capture/04b-ghcr-package-locatic-details.png)
+
+	Constat : la page detaillee du package `locatic` confirme la publication de l'image conteneur.
+	- owner visible : `KJovene`
+	- depot associe : `Projet_POO`
+	- package public : `Public`
+	- tag/image visible : `d9bc36a`
+	- tag de branche visible : `main`
+	- date de publication visible : `23 minutes ago` au moment de la capture
+	- commande de pull affichee : `docker pull ghcr.io/KJovene/locatic:d9bc36a`
+
+Synthese : la publication vers GitHub Container Registry est bien effective apres le merge sur `main`. L'image `ghcr.io/KJovene/locatic` existe, est consultable via GitHub Packages et possede au moins un tag publie correspondant au commit merge sur `main`.
