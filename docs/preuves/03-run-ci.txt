@@ -1,0 +1,38 @@
+Preuves GitHub Actions et Pull Request `dev` -> `main` (PR #4).
+
+1. Capture [capture/03a-pr-open-checks-green-review-required.png](capture/03a-pr-open-checks-green-review-required.png)
+
+	Constat : la Pull Request #4 `dev` -> `main` est encore ouverte. Les checks sont déjà au vert (`All checks have passed`, `3 skipped, 7 successful checks`), mais la fusion reste bloquée pour deux raisons visibles sur la capture :
+	- `Review required` : au moins une review approuvée est exigée.
+	- `This branch is out-of-date with the base branch` : la branche doit être resynchronisée avec `main`.
+
+2. Capture [capture/03b-pr-approved-ready-to-merge.png](capture/03b-pr-approved-ready-to-merge.png)
+
+	Constat : la même Pull Request est désormais approuvée (`KJovene approved these changes now`). Les conditions de fusion visibles sont remplies :
+	- `Changes approved` : 1 review approuvée par un reviewer avec accès en écriture.
+	- `All checks have passed` : `3 skipped, 7 successful checks`.
+	- `No conflicts with base branch` : fusion automatique possible.
+	- le bouton `Merge pull request` est disponible.
+
+3. Capture [capture/03c-main-workflow-jobs-green-prod-pending.png](capture/03c-main-workflow-jobs-green-prod-pending.png)
+
+	Constat : après la fusion, le workflow GitHub Actions `CI/CD Pipeline` s'exécute sur `main` avec le run `Merge pull request #4 from KJovene/dev #10`.
+	- `test` est terminé avec succès.
+	- `build / build` est terminé avec succès.
+	- `security` est terminé avec succès.
+	- `deploy-dev` est ignoré, ce qui est cohérent pour un push sur `main`.
+	- `deploy-prod` est en attente de validation sur l'environnement `prod` (`prod waiting for review`) avec un `wait timer` de 5 minutes.
+	- 1 artefact est déjà visible sur le run.
+
+4. Capture [capture/03d-main-workflow-success-deploy-prod-approved.png](capture/03d-main-workflow-success-deploy-prod-approved.png)
+
+	Constat : le même workflow GitHub Actions est finalement terminé avec succès (`Success`).
+	- `test` est vert.
+	- `build / build` est vert.
+	- `security` est vert.
+	- `deploy-dev` est ignoré, ce qui reste cohérent pour un push sur `main`.
+	- `deploy-prod` est vert apres approbation de l'environnement `prod`.
+	- la section `Deployment protection rules` montre l'approbation de `KJovene` et le `wait timer` complete.
+	- la duree totale du workflow visible sur la capture est `54m 11s`.
+
+Synthese : la PR `dev` -> `main` a bien atteint l'etat fusionnable, a ete approuvee puis mergee, et a declenche un run sur `main` finalement termine avec succes. Les jobs attendus `test` -> `build` -> `security` sont verts et le deploiement simule `deploy-prod` a lui aussi ete valide apres approbation de l'environnement `prod`.

@@ -4,9 +4,9 @@ Ce dossier rassemble les captures, extraits de logs et exports montrant que les 
 
 ## À déposer ici
 
-- [ ] Capture de la Pull Request mergée (checks CI verts, review obligatoire visible).
+- [x] Capture de la Pull Request mergée (checks CI verts, review obligatoire visible).
 - [x] Capture de la ruleset GitHub sur `main` (`Settings → Rules → Rulesets`).
-- [ ] Capture du run GitHub Actions complet (`test` → `build` → `security`) et de l'image publiée sur GHCR (`ghcr.io/<owner>/locatic`, onglet Packages du dépôt).
+- [x] Capture du run GitHub Actions complet (`test` → `build` → `security`) et de l'image publiée sur GHCR (`ghcr.io/<owner>/locatic`, onglet Packages du dépôt).
 - [x] Sortie de `terraform apply` (`infra/kubernetes/terraform`) montrant le namespace et le PVC créés.
 - [x] Sortie de `ansible-playbook site.yml` allant jusqu'au bout sans erreur.
 - [x] `kubectl get all -n locatic-dev` et `kubectl get all -n monitoring` montrant tous les pods `Running`.
@@ -16,7 +16,7 @@ Ce dossier rassemble les captures, extraits de logs et exports montrant que les 
 - [x] Capture de Prometheus → Status → Targets montrant l'application et Nginx en `UP`.
 - [x] Exemple d'alerte déclenchée puis résolue (ex. `LocaticAppDown` en arrêtant temporairement le déploiement applicatif).
 
-Items 1 et 3 (captures GitHub) : non produits — aucun run CI ne s'est encore exécuté sur `main` (les pushes historiques ciblent `dev`) et le token `gh` local n'a pas le scope `read:packages`. Une preuve réelle nécessiterait de merger `dev` → `main`, ce qui a été volontairement laissé de côté pour l'instant.
+Les preuves GitHub sont désormais archivées : la PR `dev` → `main` #4 a été capturée avant merge, après approbation, puis une fois mergée ; le run GitHub Actions sur `main` est visible, ainsi que la publication du package sur GitHub Packages / GHCR.
 
 ## Convention de nommage
 
@@ -24,8 +24,16 @@ Items 1 et 3 (captures GitHub) : non produits — aucun run CI ne s'est encore e
 
 ```
 01-pr-checks.txt
+01-pr-merged-main-checks-passed.png
 02-ruleset-main.json
-03-ci-pipeline.txt
+03-run-ci.txt
+03a-pr-open-checks-green-review-required.png
+03b-pr-approved-ready-to-merge.png
+03c-main-workflow-jobs-green-prod-pending.png
+03d-main-workflow-success-deploy-prod-approved.png
+04-ghcr-package.txt
+04a-github-packages-list-locatic.png
+04b-ghcr-package-locatic-details.png
 05-terraform-apply.log
 06-ansible-playbook.log
 07-kubectl-get-all.txt
@@ -40,7 +48,14 @@ Items 1 et 3 (captures GitHub) : non produits — aucun run CI ne s'est encore e
 
 ### 01/02 — Pull Request & ruleset `main`
 
-Checks non disponibles via `gh pr checks` pour la PR #3 (historique trop ancien). La ruleset, elle, est entièrement vérifiée :
+Deux états de la PR `dev` → `main` #4 ont été capturés :
+
+- d'abord une PR ouverte avec checks verts mais fusion bloquée par l'absence de review et par une branche en retard sur `main`,
+- puis une PR approuvée (`1 approving review`) avec checks toujours verts et bouton `Merge pull request` disponible.
+
+Une troisième capture montre ensuite la PR mergée avec `10 checks passed` et l'état `Merged` : [`capture/01-pr-merged-main-checks-passed.png`](capture/01-pr-merged-main-checks-passed.png).
+
+Le détail des constats capture par capture est consigné dans [`03-run-ci.txt`](03-run-ci.txt). La ruleset, elle, est entièrement vérifiée :
 
 ```bash
 gh api repos/$REPO/rulesets/18429682 | jq .
@@ -50,7 +65,43 @@ gh api repos/$REPO/rulesets/18429682 | jq .
 
 ### 03 — Run CI + image GHCR
 
-Non réalisable en l'état : aucun run GitHub Actions ne s'est exécuté sur `main` depuis la mise en place du pipeline (tous les runs historiques sont déclenchés par des push sur `dev`). Nécessite un merge réel vers `main`.
+Le merge de la PR #4 a déclenché un run GitHub Actions sur `main` : `Merge pull request #4 from KJovene/dev #10`.
+
+Constat visible sur la capture du run :
+
+- `test` est vert,
+- `build / build` est vert,
+- `security` est vert,
+- `deploy-dev` est ignoré, ce qui est cohérent pour un push sur `main`,
+- `deploy-prod` est finalement vert après approbation de l'environnement `prod`,
+- le workflow global est en état `Success`.
+
+Les captures de cette étape sont archivées ici :
+
+- [`capture/03a-pr-open-checks-green-review-required.png`](capture/03a-pr-open-checks-green-review-required.png)
+- [`capture/03b-pr-approved-ready-to-merge.png`](capture/03b-pr-approved-ready-to-merge.png)
+- [`capture/03c-main-workflow-jobs-green-prod-pending.png`](capture/03c-main-workflow-jobs-green-prod-pending.png)
+- [`capture/03d-main-workflow-success-deploy-prod-approved.png`](capture/03d-main-workflow-success-deploy-prod-approved.png)
+
+Ces captures suffisent à montrer que le pipeline sur `main` a bien démarré puis s'est terminé avec succès, y compris après validation de `deploy-prod`. La preuve de publication elle-même est isolée dans l'étape suivante. Détail complet : [`03-run-ci.txt`](03-run-ci.txt).
+
+### 04 — Publication de l'image sur GHCR
+
+Après le merge vers `main`, le workflow réutilisable Docker est censé publier l'image sur GitHub Container Registry sous `ghcr.io/KJovene/locatic`, car le job `build` est exécuté avec la publication activée sur `main`.
+
+Les captures archivées pour clôturer cette étape sont :
+
+- [`capture/04a-github-packages-list-locatic.png`](capture/04a-github-packages-list-locatic.png) : liste des packages du compte montrant `locatic` publié dans `KJovene/Projet_POO`,
+- [`capture/04b-ghcr-package-locatic-details.png`](capture/04b-ghcr-package-locatic-details.png) : page détaillée du package montrant le package `locatic`, l'owner `KJovene`, le tag `d9bc36a`, le tag `main` et la date de publication.
+
+Les éléments de preuve visibles sur la page détaillée sont :
+
+- le package `locatic`,
+- l'owner `KJovene`,
+- au moins un tag publié,
+- idéalement une date de publication cohérente avec le merge sur `main`.
+
+Le détail rédigé de cette preuve est consigné dans [`04-ghcr-package.txt`](04-ghcr-package.txt). L'étape 04 est donc validée visuellement.
 
 ### 05 — `terraform apply`
 
