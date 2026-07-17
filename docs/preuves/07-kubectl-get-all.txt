@@ -1,0 +1,50 @@
+NAME                                 READY   STATUS    RESTARTS        AGE
+pod/locatic-644676795c-r9rqv         1/1     Running   0               2m7s
+pod/locatic-nginx-7d66744c49-gnnsd   2/2     Running   7 (3m27s ago)   45m
+
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/locatic-nginx-svc   NodePort    10.102.103.151   <none>        80:30080/TCP   45m
+service/locatic-svc         ClusterIP   10.108.124.235   <none>        8080/TCP       45m
+
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/locatic         1/1     1            1           45m
+deployment.apps/locatic-nginx   1/1     1            1           45m
+
+NAME                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/locatic-644676795c         1         1         1       21m
+replicaset.apps/locatic-744dd54b54         0         0         0       45m
+replicaset.apps/locatic-nginx-7d66744c49   1         1         1       45m
+NAME                                                            READY   STATUS    RESTARTS   AGE
+pod/alertmanager-kube-prometheus-stack-alertmanager-0           2/2     Running   0          46m
+pod/kube-prometheus-stack-grafana-678cb54dcb-wtmhk              3/3     Running   0          46m
+pod/kube-prometheus-stack-kube-state-metrics-7f5c47f68c-9428n   1/1     Running   0          46m
+pod/kube-prometheus-stack-operator-76f45894f5-57gnn             1/1     Running   0          46m
+pod/kube-prometheus-stack-prometheus-node-exporter-khrcs        1/1     Running   0          46m
+pod/prometheus-kube-prometheus-stack-prometheus-0               2/2     Running   0          46m
+
+NAME                                                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+service/alertmanager-operated                            ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP   46m
+service/kube-prometheus-stack-alertmanager               ClusterIP   10.100.69.227    <none>        9093/TCP,8080/TCP            46m
+service/kube-prometheus-stack-grafana                    ClusterIP   10.103.196.115   <none>        80/TCP                       46m
+service/kube-prometheus-stack-kube-state-metrics         ClusterIP   10.107.78.254    <none>        8080/TCP                     46m
+service/kube-prometheus-stack-operator                   ClusterIP   10.100.104.150   <none>        443/TCP                      46m
+service/kube-prometheus-stack-prometheus                 ClusterIP   10.111.105.128   <none>        9090/TCP,8080/TCP            46m
+service/kube-prometheus-stack-prometheus-node-exporter   ClusterIP   10.103.160.167   <none>        9100/TCP                     46m
+service/prometheus-operated                              ClusterIP   None             <none>        9090/TCP                     46m
+
+NAME                                                            DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+daemonset.apps/kube-prometheus-stack-prometheus-node-exporter   1         1         1       1            1           kubernetes.io/os=linux   46m
+
+NAME                                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kube-prometheus-stack-grafana              1/1     1            1           46m
+deployment.apps/kube-prometheus-stack-kube-state-metrics   1/1     1            1           46m
+deployment.apps/kube-prometheus-stack-operator             1/1     1            1           46m
+
+NAME                                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/kube-prometheus-stack-grafana-678cb54dcb              1         1         1       46m
+replicaset.apps/kube-prometheus-stack-kube-state-metrics-7f5c47f68c   1         1         1       46m
+replicaset.apps/kube-prometheus-stack-operator-76f45894f5             1         1         1       46m
+
+NAME                                                               READY   AGE
+statefulset.apps/alertmanager-kube-prometheus-stack-alertmanager   1/1     46m
+statefulset.apps/prometheus-kube-prometheus-stack-prometheus       1/1     46m

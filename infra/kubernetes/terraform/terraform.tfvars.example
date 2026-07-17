@@ -1,0 +1,8 @@
+# Copier en terraform.tfvars (ignoré par Git) puis ajuster.
+# Aucune valeur secrète ici : SQLite ne nécessite pas de mot de passe.
+
+kube_context   = "minikube"
+environment    = "dev"        # dev | prod
+sqlite_storage = "1Gi"
+# namespace    = "locatic-dev"  # sinon dérivé automatiquement de environment
+# storage_class = "standard"    # vide = classe par défaut du cluster

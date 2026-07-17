@@ -1,0 +1,7 @@
+$ gh pr list --repo "$REPO" --state merged --limit 5
+3	Dev	dev	MERGED	2026-06-26T15:46:14Z
+2	feat: Added crud for Client and Reservation	feature/client	MERGED	2026-06-25T17:31:58Z
+1	Added seed for cars	feature/seed	MERGED	2026-06-25T17:31:36Z
+
+$ gh pr checks 3 --repo "$REPO"
+no checks reported on the 'dev' branch

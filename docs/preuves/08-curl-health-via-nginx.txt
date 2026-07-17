@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+Server: nginx/1.31.3
+Date: Fri, 17 Jul 2026 10:15:42 GMT
+Content-Type: text/plain
+Transfer-Encoding: chunked
+Connection: keep-alive
+Cache-Control: no-store, no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Pragma: no-cache
+
+Healthy

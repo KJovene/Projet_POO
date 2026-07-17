@@ -1,0 +1,15 @@
+Locatic est déployé dans le namespace {{ .Release.Namespace }}, derrière Nginx (reverse-proxy, point d'entrée unique).
+
+Exposition locale (minikube) :
+{{- if eq .Values.nginx.service.type "NodePort" }}
+  minikube service {{ include "devops-app.fullname" . }}-nginx-svc -n {{ .Release.Namespace }} --url
+{{- else }}
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "devops-app.fullname" . }}-nginx-svc 18080:{{ .Values.nginx.service.port }}
+{{- end }}
+
+Vérification depuis le poste de travail :
+  curl <url>/           # page d'accueil
+  curl <url>/health     # doit répondre "Healthy"
+
+État du déploiement :
+  kubectl get pods,svc -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}

@@ -1,0 +1,95 @@
+{
+  "job": "monitoring/locatic-app",
+  "health": "up",
+  "instance": "10.244.0.17:8080"
+}
+{
+  "job": "monitoring/locatic-nginx",
+  "health": "up",
+  "instance": "10.244.0.11:9113"
+}
+{
+  "job": "kube-prometheus-stack-alertmanager",
+  "health": "up",
+  "instance": "10.244.0.8:9093"
+}
+{
+  "job": "kube-prometheus-stack-alertmanager",
+  "health": "up",
+  "instance": "10.244.0.8:8080"
+}
+{
+  "job": "apiserver",
+  "health": "up",
+  "instance": "192.168.49.2:8443"
+}
+{
+  "job": "coredns",
+  "health": "up",
+  "instance": "10.244.0.2:9153"
+}
+{
+  "job": "kube-prometheus-stack-grafana",
+  "health": "up",
+  "instance": "10.244.0.5:3000"
+}
+{
+  "job": "kube-controller-manager",
+  "health": "down",
+  "instance": "192.168.49.2:10257"
+}
+{
+  "job": "kube-etcd",
+  "health": "down",
+  "instance": "192.168.49.2:2381"
+}
+{
+  "job": "kube-proxy",
+  "health": "up",
+  "instance": "192.168.49.2:10249"
+}
+{
+  "job": "kube-scheduler",
+  "health": "down",
+  "instance": "192.168.49.2:10259"
+}
+{
+  "job": "kube-state-metrics",
+  "health": "up",
+  "instance": "10.244.0.6:8080"
+}
+{
+  "job": "kubelet",
+  "health": "up",
+  "instance": "192.168.49.2:10250"
+}
+{
+  "job": "kubelet",
+  "health": "up",
+  "instance": "192.168.49.2:10250"
+}
+{
+  "job": "kubelet",
+  "health": "up",
+  "instance": "192.168.49.2:10250"
+}
+{
+  "job": "kube-prometheus-stack-operator",
+  "health": "up",
+  "instance": "10.244.0.4:10250"
+}
+{
+  "job": "node-exporter",
+  "health": "up",
+  "instance": "192.168.49.2:9100"
+}
+{
+  "job": "kube-prometheus-stack-prometheus",
+  "health": "up",
+  "instance": "10.244.0.9:9090"
+}
+{
+  "job": "kube-prometheus-stack-prometheus",
+  "health": "up",
+  "instance": "10.244.0.9:8080"
+}

@@ -1,0 +1,97 @@
+# Valeurs par défaut du chart Locatic (profil "dev" adapté à minikube).
+# Les overlays infra/helm/values-<env>.yaml surchargent ces valeurs.
+replicaCount: 1
+
+image:
+  repository: locatic
+  tag: "local"
+  # Never : on charge l'image dans minikube (minikube image load), pas de pull registry.
+  pullPolicy: IfNotPresent
+
+service:
+  # ClusterIP : l'application n'est plus exposée directement, Nginx est le point d'entrée (voir bloc nginx ci-dessous).
+  type: ClusterIP
+  port: 8080
+
+config:
+  aspnetcoreEnvironment: Production
+  aspnetcoreUrls: "http://+:8080"
+  appPort: 8080
+  logLevel: Information
+  # SQLite stocké sur un volume dédié (voir persistence) pour survivre aux redémarrages du conteneur.
+  connectionString: "Data Source=/app/data/locatic.db"
+
+# Volume pour la base SQLite.
+# - existingClaim vide  -> emptyDir (démo autonome, sans Terraform).
+# - existingClaim défini -> PVC préparé par Terraform (stockage persistant).
+persistence:
+  enabled: true
+  mountPath: /app/data
+  existingClaim: ""
+
+# L'application utilise SQLite : pas de PostgreSQL ni de secret de base de données.
+postgresql:
+  enabled: false
+
+secret:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+probes:
+  readiness:
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  liveness:
+    path: /health
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+# Reverse-proxy devant l'application : seul point d'entrée utilisateur exposé.
+nginx:
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  exporter:
+    repository: nginx/nginx-prometheus-exporter
+    tag: "1.4.1"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: NodePort
+    port: 80
+    # Port fixe pour une exposition locale reproductible (30000-32767).
+    nodePort: 30080
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+  probes:
+    readiness:
+      path: /
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    liveness:
+      path: /
+      initialDelaySeconds: 10
+      periodSeconds: 20
+
+# Annotations Prometheus (étape 12). Désactivé par défaut : l'application n'expose
+# un endpoint /metrics, et Nginx est scrappé via son exporter sidecar.
+metrics:
+  enabled: true
+
+monitoring:
+  namespace: monitoring
+  releaseLabel: kube-prometheus-stack

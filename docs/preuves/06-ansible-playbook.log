@@ -1,0 +1,66 @@
+
+PLAY [Orchestrer le déploiement local sur minikube (Terraform -> Helm)] ********
+
+TASK [prereqs : Vérifier la présence des binaires requis (terraform, kubectl, helm, minikube)] ***
+ok: [localhost] => (item=terraform)
+ok: [localhost] => (item=kubectl)
+ok: [localhost] => (item=helm)
+ok: [localhost] => (item=minikube)
+
+TASK [prereqs : Vérifier l'état de minikube] ***********************************
+ok: [localhost]
+
+TASK [prereqs : Échouer avec un message explicite si minikube n'est pas démarré] ***
+skipping: [localhost]
+
+TASK [prereqs : Vérifier que kubectl a bien un contexte courant] ***************
+ok: [localhost]
+
+TASK [prereqs : Échouer si kubectl n'a pas de contexte configuré] **************
+skipping: [localhost]
+
+TASK [prereqs : Vérifier que kubectl peut joindre le cluster minikube] *********
+ok: [localhost]
+
+TASK [prereqs : Échouer si kubectl ne peut pas joindre l'API Kubernetes] *******
+skipping: [localhost]
+
+TASK [terraform_output : Lire les outputs Terraform (namespace + PVC SQLite préparés à l'étape 8)] ***
+ok: [localhost]
+
+TASK [terraform_output : Échouer si les outputs Terraform sont introuvables] ***
+skipping: [localhost]
+
+TASK [terraform_output : Exposer les outputs Terraform aux rôles suivants] *****
+ok: [localhost]
+
+TASK [deploy_monitoring : Ajouter le repo Helm Prometheus Community] ***********
+changed: [localhost]
+
+TASK [deploy_monitoring : Mettre à jour les repos Helm] ************************
+ok: [localhost]
+
+TASK [deploy_monitoring : Installer ou mettre à jour kube-prometheus-stack] ****
+changed: [localhost]
+
+TASK [deploy_monitoring : Attendre que Prometheus Operator soit prêt] **********
+ok: [localhost]
+
+TASK [deploy_monitoring : Attendre que Grafana soit prêt] **********************
+ok: [localhost]
+
+TASK [deploy_app : Charger l'image applicative dans le cluster minikube (pas de registry)] ***
+changed: [localhost]
+
+TASK [deploy_app : Déployer/mettre à jour la release Helm de l'application] ****
+ok: [localhost]
+
+TASK [deploy_app : Attendre que le déploiement de l'application soit prêt] *****
+ok: [localhost]
+
+TASK [deploy_app : Attendre que le reverse-proxy Nginx soit prêt] **************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=15   changed=3    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0   
+

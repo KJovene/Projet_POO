@@ -1,0 +1,32 @@
+- name: Charger l'image applicative dans le cluster minikube (pas de registry)
+  ansible.builtin.command: minikube image load {{ app_image }}
+  changed_when: true
+
+- name: Déployer/mettre à jour la release Helm de l'application
+  ansible.builtin.command: >
+    helm upgrade --install {{ tf_handoff.app_name }} {{ tf_handoff.chart_path }}
+    -n {{ tf_handoff.namespace }} --create-namespace
+    --kube-context {{ tf_handoff.kube_context }}
+    -f {{ tf_handoff.values_files | join(' -f ') }}
+    --set persistence.existingClaim={{ tf_handoff.sqlite_pvc }}
+    --set config.connectionString="Data Source={{ tf_handoff.sqlite_path }}"
+  args:
+    chdir: "{{ terraform_kubernetes_dir }}"
+  register: helm_result
+  changed_when: "'has been upgraded' in helm_result.stdout or 'has been installed' in helm_result.stdout"
+
+- name: Attendre que le déploiement de l'application soit prêt
+  ansible.builtin.command: >
+    kubectl rollout status deployment/{{ tf_handoff.app_name }}
+    -n {{ tf_handoff.namespace }}
+    --context {{ tf_handoff.kube_context }}
+    --timeout=120s
+  changed_when: false
+
+- name: Attendre que le reverse-proxy Nginx soit prêt
+  ansible.builtin.command: >
+    kubectl rollout status deployment/{{ tf_handoff.app_name }}-nginx
+    -n {{ tf_handoff.namespace }}
+    --context {{ tf_handoff.kube_context }}
+    --timeout=120s
+  changed_when: false

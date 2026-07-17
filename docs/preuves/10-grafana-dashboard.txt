@@ -1,0 +1,25 @@
+=== Dashboard Locatic Overview ===
+- HTTP Request Rate (timeseries)
+- HTTP Duration P95 (timeseries)
+- Nginx Requests (timeseries)
+- Nginx Active Connections (stat)
+- Pods Not Ready (stat)
+- SQLite PVC Usage % (gauge)
+- Kubernetes Services Up (stat)
+
+=== Datasources ===
+Alertmanager: alertmanager -> http://kube-prometheus-stack-alertmanager.monitoring:9093/
+Prometheus: prometheus -> http://kube-prometheus-stack-prometheus.monitoring:9090/
+=== requêtes PromQL des panneaux (données réelles) ===
+-- HTTP Request Rate --
+[{"metric":{},"value":[1784284227.143,"0.10415037037037037"]}]
+-- Nginx Requests --
+[{"metric":{},"value":[1784284227.164,"0.22105263157894733"]}]
+-- Nginx Active Connections --
+[{"metric":{},"value":[1784284227.183,"1"]}]
+-- Pods Not Ready --
+[]
+-- SQLite PVC Usage % --
+[]
+-- Kubernetes Services Up --
+[]

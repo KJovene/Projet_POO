@@ -1,0 +1,43 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "devops-app.fullname" . }}-alerts
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    release: {{ .Values.monitoring.releaseLabel }}
+spec:
+  groups:
+    - name: {{ include "devops-app.fullname" . }}.rules
+      rules:
+        - alert: LocaticAppDown
+          expr: |
+            up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*", job=~".*app.*"} == 0
+            or absent(up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*", job=~".*app.*"})
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Locatic indisponible"
+            description: "Le scrape Prometheus de l'application Locatic est en erreur depuis 2 minutes."
+
+        - alert: NginxExporterDown
+          expr: |
+            up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*nginx.*", job=~".*nginx.*"} == 0
+            or absent(up{namespace="{{ .Release.Namespace }}", pod=~"{{ include "devops-app.fullname" . }}.*nginx.*", job=~".*nginx.*"})
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Exporter Nginx indisponible"
+            description: "Les métriques Nginx ne remontent plus vers Prometheus."
+
+        - alert: SQLiteVolumeUsageHigh
+          expr: 100 * kubelet_volume_stats_used_bytes{namespace="{{ .Release.Namespace }}", persistentvolumeclaim="{{ .Values.persistence.existingClaim }}"} / kubelet_volume_stats_capacity_bytes{namespace="{{ .Release.Namespace }}", persistentvolumeclaim="{{ .Values.persistence.existingClaim }}"} > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC SQLite presque plein"
+            description: "Le volume persistant SQLite dépasse 80% d'utilisation."
+{{- end }}

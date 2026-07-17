@@ -1,0 +1,8 @@
+apiVersion: v2
+name: locatic
+description: Application Locatic (ASP.NET Core + SQLite) packagée avec Helm pour minikube
+type: application
+version: 0.2.0
+appVersion: "1.0.0"
+maintainers:
+  - name: DevOps Team

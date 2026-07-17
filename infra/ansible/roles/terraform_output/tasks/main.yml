@@ -1,0 +1,18 @@
+- name: Lire les outputs Terraform (namespace + PVC SQLite préparés à l'étape 8)
+  ansible.builtin.command: terraform output -json handoff
+  args:
+    chdir: "{{ terraform_kubernetes_dir }}"
+  register: tf_handoff_raw
+  changed_when: false
+  failed_when: false
+
+- name: Échouer si les outputs Terraform sont introuvables
+  ansible.builtin.fail:
+    msg: >
+      Impossible de lire les outputs Terraform dans {{ terraform_kubernetes_dir }}.
+      Avez-vous lancé `terraform apply` dans infra/kubernetes/terraform ?
+  when: tf_handoff_raw.rc != 0
+
+- name: Exposer les outputs Terraform aux rôles suivants
+  ansible.builtin.set_fact:
+    tf_handoff: "{{ tf_handoff_raw.stdout | from_json }}"

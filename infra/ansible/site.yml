@@ -1,0 +1,8 @@
+- name: Orchestrer le déploiement local sur minikube (Terraform -> Helm)
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - prereqs
+    - terraform_output
+    - deploy_monitoring
+    - deploy_app
